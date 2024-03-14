@@ -1,8 +1,10 @@
-package ru.glazunov.habitstracker
+package ru.glazunov.habitstracker.habits
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import ru.glazunov.habitstracker.R
+import ru.glazunov.habitstracker.models.HabitInfo
 
 class HabitsAdapter(private val habitsInfos: MutableList<HabitInfo>) :
     RecyclerView.Adapter<HabitViewHolder>() {

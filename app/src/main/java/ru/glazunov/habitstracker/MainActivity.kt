@@ -6,6 +6,11 @@ import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.activity_main.*
+import ru.glazunov.habitstracker.habits.HabitsAdapter
+import ru.glazunov.habitstracker.infrastructure.Constants
+import ru.glazunov.habitstracker.infrastructure.HabitEditingActivityContract
+import ru.glazunov.habitstracker.models.HabitInfo
+import ru.glazunov.habitstracker.models.HabitInfoTransportWrapper
 
 class MainActivity : AppCompatActivity() {
     private val habitEditing = registerForActivityResult(HabitEditingActivityContract()) { result: HabitInfoTransportWrapper ->

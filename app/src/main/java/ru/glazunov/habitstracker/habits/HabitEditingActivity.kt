@@ -1,4 +1,4 @@
-package ru.glazunov.habitstracker
+package ru.glazunov.habitstracker.habits
 
 import android.app.Activity
 import android.content.Intent
@@ -17,6 +17,9 @@ import androidx.core.graphics.red
 import androidx.core.view.children
 import androidx.core.view.doOnLayout
 import kotlinx.android.synthetic.main.activity_habit_editing.*
+import ru.glazunov.habitstracker.R
+import ru.glazunov.habitstracker.infrastructure.Constants
+import ru.glazunov.habitstracker.models.HabitInfo
 import java.util.LinkedList
 import kotlin.math.round
 

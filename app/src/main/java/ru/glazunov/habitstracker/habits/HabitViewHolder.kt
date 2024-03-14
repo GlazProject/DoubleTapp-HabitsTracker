@@ -1,9 +1,12 @@
-package ru.glazunov.habitstracker
+package ru.glazunov.habitstracker.habits
 
 import android.content.Context
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.view_habit_info.view.*
+import ru.glazunov.habitstracker.MainActivity
+import ru.glazunov.habitstracker.R
+import ru.glazunov.habitstracker.models.HabitInfo
 
 class HabitViewHolder(
     private val view: View,

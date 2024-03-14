@@ -1,9 +1,12 @@
-package ru.glazunov.habitstracker
+package ru.glazunov.habitstracker.infrastructure
 
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import androidx.activity.result.contract.ActivityResultContract
+import ru.glazunov.habitstracker.habits.HabitEditingActivity
+import ru.glazunov.habitstracker.models.HabitInfo
+import ru.glazunov.habitstracker.models.HabitInfoTransportWrapper
 
 class HabitEditingActivityContract :
     ActivityResultContract<HabitInfoTransportWrapper, HabitInfoTransportWrapper>() {
