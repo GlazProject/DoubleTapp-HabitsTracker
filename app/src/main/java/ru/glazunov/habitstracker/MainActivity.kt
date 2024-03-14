@@ -1,58 +1,51 @@
 package ru.glazunov.habitstracker
 
 import android.os.Bundle
-import com.google.android.material.snackbar.Snackbar
 import androidx.appcompat.app.AppCompatActivity
-import androidx.navigation.findNavController
-import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.navigateUp
-import androidx.navigation.ui.setupActionBarWithNavController
-import android.view.Menu
-import android.view.MenuItem
-import ru.glazunov.habitstracker.databinding.ActivityMainBinding
+import android.view.View
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
+    private val habitEditing = registerForActivityResult(HabitEditingActivityContract()) { result: HabitInfoTransportWrapper ->
+        if (result.habitPosition != -1)
+            habitViewAdapter.changeHabitInfo(result.habitPosition, result.habitInfo!!)
+        else
+            habitViewAdapter.addHabitInfo(result.habitInfo!!)
+    }
 
-    private lateinit var appBarConfiguration: AppBarConfiguration
-    private lateinit var binding: ActivityMainBinding
+    private lateinit var recyclerView: RecyclerView
+    private lateinit var habitViewAdapter: HabitsAdapter
+    private lateinit var viewManager: RecyclerView.LayoutManager
+    private var habitsInfos: ArrayList<HabitInfo> = arrayListOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
 
-        binding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+        fab.setOnClickListener(this::onFabClick)
+        if (savedInstanceState != null)
+            habitsInfos = savedInstanceState
+                .getParcelableArrayList(Constants.HABITS_INFOS, HabitInfo::class.java) as ArrayList<HabitInfo>
 
-        setSupportActionBar(binding.toolbar)
-
-        val navController = findNavController(R.id.nav_host_fragment_content_main)
-        appBarConfiguration = AppBarConfiguration(navController.graph)
-        setupActionBarWithNavController(navController, appBarConfiguration)
-
-        binding.fab.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                .setAction("Action", null).show()
+        viewManager = LinearLayoutManager(this)
+        habitViewAdapter = HabitsAdapter(habitsInfos)
+        recyclerView = habitsRecyclerView.apply {
+            setHasFixedSize(true)
+            layoutManager = viewManager
+            adapter = habitViewAdapter
         }
     }
 
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        menuInflater.inflate(R.menu.menu_main, menu)
-        return true
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putParcelableArrayList(Constants.HABITS_INFOS, habitsInfos)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        return when (item.itemId) {
-            R.id.action_settings -> true
-            else -> super.onOptionsItemSelected(item)
-        }
-    }
+    private fun onFabClick(view: View) = editHabit()
 
-    override fun onSupportNavigateUp(): Boolean {
-        val navController = findNavController(R.id.nav_host_fragment_content_main)
-        return navController.navigateUp(appBarConfiguration)
-                || super.onSupportNavigateUp()
+    public fun editHabit(habitInfo: HabitInfo? = null, habitPosition: Int? = null){
+        habitEditing.launch(HabitInfoTransportWrapper(habitInfo, habitPosition ?: -1))
     }
 }

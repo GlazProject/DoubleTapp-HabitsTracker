@@ -1,12 +1,27 @@
 <resources>
     <string name="app_name">HabitsTracker</string>
     <string name="action_settings">Settings</string>
-    <!-- Strings used for fragments for navigation -->
-    <string name="first_fragment_label">First Fragment</string>
-    <string name="second_fragment_label">Second Fragment</string>
-    <string name="next">Next</string>
-    <string name="previous">Previous</string>
 
-    <string name="hello_first_fragment">Hello first fragment</string>
-    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+    <string name="add_new_habit">Добавить новую привычку</string>
+    <string name="habit_name">Название</string>
+    <string name="habit_description">Описание</string>
+    <string name="habit_type">Тип</string>
+    <string name="positive_habit">Хорошая</string>
+    <string name="negative_habit">Плохая</string>
+    <string name="habit_priority">Приоритет:</string>
+    <string name="repeats_count">Число повторений:</string>
+    <string name="times_in_days">Периодичность в днях:</string>
+    <string name="selected_color">Выбранный цвет</string>
+    <string name="rgb_color">rgb : ( %1$d, %2$d, %3$d)</string>
+    <string name="hsv_color">hsv : ( %1$.1f, %2$.1f, %3$.1f)</string>
+    <string name="cancel">Отменить</string>
+    <string name="save">Сохранить</string>
+
+    <string name="repeatInDays">%1$d раз в %2$d дней</string>
+
+    <string-array name="habit_priorities">
+        <item>Высокий</item>
+        <item>Средний</item>
+        <item>Низкий</item>
+    </string-array>
 </resources>
