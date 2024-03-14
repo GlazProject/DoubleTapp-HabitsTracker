@@ -7,7 +7,6 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.GradientDrawable
-import android.graphics.drawable.RippleDrawable
 import android.os.Bundle
 import android.view.View
 import android.widget.*
@@ -24,6 +23,7 @@ import kotlin.math.round
 
 class HabitEditingActivity : AppCompatActivity() {
     companion object {
+        private val stateArray = intArrayOf(android.R.attr.state_active)
         private const val colorPickerSquaresNumber = 10
 
         private fun hsv2rgb(hex: Int): IntArray {
@@ -80,9 +80,10 @@ class HabitEditingActivity : AppCompatActivity() {
     }
 
     private fun createColorButtons() {
-        val colors = getGradientColors(30F, 0.8F, 0.3F)
+        val colors = getGradientColors(10F, 0.85F, 0.95F)
         val gradientDrawable = GradientDrawable(GradientDrawable.Orientation.LEFT_RIGHT, colors)
         colorPickerLayout.background = gradientDrawable
+
         for (buttonNumber in 0 until colorPickerSquaresNumber) {
             val button = Button(this)
             button.setBackgroundColor(colors[0])
@@ -97,8 +98,10 @@ class HabitEditingActivity : AppCompatActivity() {
     private fun onColorSquareClick(view: View) {
         val color = (view.background as ColorDrawable).color
         chosenColorDisplay.setBackgroundColor(color)
+
         val hsv = FloatArray(3)
         Color.colorToHSV(color, hsv)
+
         val rgb = hsv2rgb(color)
         rgbColorValue.text = getString(R.string.rgb_color, rgb[0], rgb[1], rgb[2])
         hsvColorValue.text = getString(R.string.hsv_color, hsv[0], hsv[1], hsv[2])
@@ -111,6 +114,7 @@ class HabitEditingActivity : AppCompatActivity() {
         val canvas = Canvas(mutableBitmap)
         drawable.setBounds(0, 0, layout.width, layout.height)
         drawable.draw(canvas)
+
         for (btn in layout.children) {
             val pixelX = round(btn.x + btn.width / 2).toInt()
             val pixelY = round(btn.y + btn.height / 2).toInt()
@@ -154,7 +158,7 @@ class HabitEditingActivity : AppCompatActivity() {
             repeatsCount = habitRepeatsCount.text.toString().toIntOrNull() ?: 0,
             daysPeriod = habitRepeatDays.text.toString().toIntOrNull() ?: 0,
             priority = habitPriority.selectedItem.toString(),
-            color = chosenColorDisplay.backgroundTintList?.defaultColor?: Color.WHITE
+            color = chosenColorDisplay.backgroundTintList?.getColorForState(stateArray, 0) ?: Color.BLUE
         )
     }
 
