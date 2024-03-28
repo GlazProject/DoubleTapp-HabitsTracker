@@ -33,13 +33,13 @@ class MainActivity : AppCompatActivity(), IHabitChangedCallback {
                 else -> false
             }
         }
-        if (savedInstanceState != null) {
-            positiveHabitInfos =
-                savedInstanceState.getParcelableArrayList<HabitInfo>(Constants.FieldNames.POSITIVE_HABIT_INFOS) as ArrayList<HabitInfo>
-            negativeHabitInfos =
-                savedInstanceState.getParcelableArrayList<HabitInfo>(Constants.FieldNames.NEGATIVE_HABIT_INFOS) as ArrayList<HabitInfo>
-            navController.restoreState(savedInstanceState.getBundle(Constants.FieldNames.NAV_CONTROLLER_STATE))
-        }
+
+        if (savedInstanceState == null)
+            return;
+
+        positiveHabitInfos = savedInstanceState.getParcelableArrayList<HabitInfo>(Constants.FieldNames.POSITIVE_HABIT_INFOS) as ArrayList<HabitInfo>
+        negativeHabitInfos = savedInstanceState.getParcelableArrayList<HabitInfo>(Constants.FieldNames.NEGATIVE_HABIT_INFOS) as ArrayList<HabitInfo>
+        navController.restoreState(savedInstanceState.getBundle(Constants.FieldNames.NAV_CONTROLLER_STATE))
     }
 
     private fun getHabitInfosBundle(): Bundle {

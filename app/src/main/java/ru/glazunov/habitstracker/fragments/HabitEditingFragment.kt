@@ -201,11 +201,10 @@ class HabitEditingFragment : Fragment() {
             repeatsCount = habitRepeatsCount.text.toString().toIntOrNull() ?: 0,
             daysPeriod = habitRepeatDays.text.toString().toIntOrNull() ?: 0,
             priority = habitPriority.selectedItem.toString(),
-            color = (chosenColorDisplay.background as ColorDrawable).color
+            color = (chosenColorDisplay.background as? ColorDrawable)?.color ?: Color.WHITE // android.graphics.drawable.RippleDrawable cannot be cast to android.graphics.drawable.ColorDrawable
         )
 
     }
-
 
     private fun onSaveClick(view: View) {
         saveUserInput()

@@ -52,7 +52,7 @@ class HabitListFragment : Fragment() {
         val viewManager = LinearLayoutManager(context)
         viewAdapter = HabitsRecyclerViewAdapter(
                 habitInfos,
-                activity!!.findNavController(R.id.nav_host_fragment)
+                requireActivity().findNavController(R.id.nav_host_fragment)
             )
 
         habitsRecyclerView.apply {
