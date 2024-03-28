@@ -1,4 +1,4 @@
-package ru.glazunov.habitstracker.models
+package ru.glazunov.habitstracker
 
 import android.graphics.Color
 import android.os.Parcelable

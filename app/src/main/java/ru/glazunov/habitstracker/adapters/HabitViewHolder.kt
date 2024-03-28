@@ -1,16 +1,19 @@
-package ru.glazunov.habitstracker.habits
+package ru.glazunov.habitstracker.adapters
 
 import android.content.Context
+import android.os.Bundle
 import android.view.View
+import androidx.navigation.NavController
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.view_habit_info.view.*
-import ru.glazunov.habitstracker.MainActivity
+import ru.glazunov.habitstracker.Constants
+import ru.glazunov.habitstracker.HabitInfo
 import ru.glazunov.habitstracker.R
-import ru.glazunov.habitstracker.models.HabitInfo
 
 class HabitViewHolder(
     private val view: View,
     private val context: Context,
+    private val navController: NavController,
     var position: Int?
 ) : RecyclerView.ViewHolder(view), View.OnClickListener {
 
@@ -30,6 +33,9 @@ class HabitViewHolder(
     }
 
     override fun onClick(v: View?) {
-        (context as MainActivity).editHabit(habitInfo, position)
+        val bundle = Bundle()
+        bundle.putParcelable(Constants.FieldNames.HABIT_INFO, habitInfo)
+        bundle.putInt(Constants.FieldNames.POSITION, position ?: -1)
+        navController.navigate(R.id.action_mainFragment_to_habitEditingFragment, bundle)
     }
 }

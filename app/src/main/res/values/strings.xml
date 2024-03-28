@@ -7,7 +7,9 @@
     <string name="habit_description">Описание</string>
     <string name="habit_type">Тип</string>
     <string name="positive_habit">Хорошая</string>
+    <string name="positive_habits">Хорошие</string>
     <string name="negative_habit">Плохая</string>
+    <string name="negative_habits">Плохие</string>
     <string name="habit_priority">Приоритет:</string>
     <string name="repeats_count">Число повторений:</string>
     <string name="times_in_days">Периодичность в днях:</string>
@@ -17,7 +19,12 @@
     <string name="cancel">Отменить</string>
     <string name="save">Сохранить</string>
 
+    <string name="habit_list_menu_title">Список привычек</string>
+    <string name="application_title_info_menu_title">О приложении</string>
+
     <string name="repeatInDays">%1$d раз в %2$d дней</string>
+    <string name="application_info_title">Информация о приложении</string>
+    <string name="application_info_description">Приложение - трекер привычек</string>
 
     <string-array name="habit_priorities">
         <item>Высокий</item>

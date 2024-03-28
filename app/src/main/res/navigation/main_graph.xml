@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto" android:id="@+id/main_graph"
+    app:startDestination="@id/mainFragment">
+
+    <fragment
+        android:id="@+id/habitEditingFragment"
+        android:name="ru.glazunov.habitstracker.fragments.HabitEditingFragment"
+        android:label="HabitEditingFragment" >
+        <action
+            android:id="@+id/action_habitEditingFragment_to_mainFragment"
+            app:destination="@id/mainFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/appInfoFragment"
+        android:name="ru.glazunov.habitstracker.fragments.AppInfoFragment"
+        android:label="AppInfoFragment" >
+        <action
+            android:id="@+id/action_appInfoFragment_to_mainFragment"
+            app:destination="@id/mainFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/mainFragment"
+        android:name="ru.glazunov.habitstracker.fragments.MainFragment"
+        android:label="MainFragment" >
+        <action
+            android:id="@+id/action_mainFragment_to_habitEditingFragment"
+            app:destination="@id/habitEditingFragment" />
+        <action
+            android:id="@+id/action_mainFragment_to_appInfoFragment"
+            app:destination="@id/appInfoFragment" />
+    </fragment>
+</navigation>
