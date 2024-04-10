@@ -4,14 +4,13 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.navigation.NavController
 import androidx.recyclerview.widget.RecyclerView
-import ru.glazunov.habitstracker.HabitInfo
+import ru.glazunov.habitstracker.models.HabitInfo
 import ru.glazunov.habitstracker.R
 
 class HabitsRecyclerViewAdapter(
     private val habitsInfos: MutableList<HabitInfo>,
     private val navController: NavController
-) :
-    RecyclerView.Adapter<HabitViewHolder>() {
+) : RecyclerView.Adapter<HabitViewHolder>() {
 
     override fun onCreateViewHolder(
         parent: ViewGroup,

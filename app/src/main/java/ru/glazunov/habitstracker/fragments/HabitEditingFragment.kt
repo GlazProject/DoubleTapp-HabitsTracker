@@ -8,7 +8,6 @@ import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
-import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
@@ -20,6 +19,8 @@ import androidx.core.view.doOnLayout
 import androidx.fragment.app.Fragment
 import kotlinx.android.synthetic.main.fragment_habit_editing.*
 import ru.glazunov.habitstracker.*
+import ru.glazunov.habitstracker.models.Constants
+import ru.glazunov.habitstracker.models.HabitInfo
 import kotlin.math.round
 
 class HabitEditingFragment : Fragment() {
@@ -116,6 +117,7 @@ class HabitEditingFragment : Fragment() {
     private fun onColorSquareClick(view: View) {
         val color = (view.background as ColorDrawable).color
         chosenColorDisplay.setBackgroundColor(color)
+        chosenColorValue.text = color.toString()
         val hsv = FloatArray(3)
         Color.colorToHSV(color, hsv)
         val rgb = hexToRgb(color)
@@ -201,7 +203,7 @@ class HabitEditingFragment : Fragment() {
             repeatsCount = habitRepeatsCount.text.toString().toIntOrNull() ?: 0,
             daysPeriod = habitRepeatDays.text.toString().toIntOrNull() ?: 0,
             priority = habitPriority.selectedItem.toString(),
-            color = (chosenColorDisplay.background as? ColorDrawable)?.color ?: Color.WHITE // android.graphics.drawable.RippleDrawable cannot be cast to android.graphics.drawable.ColorDrawable
+            color =  chosenColorValue.text.toString().toIntOrNull() ?: Color.WHITE
         )
 
     }

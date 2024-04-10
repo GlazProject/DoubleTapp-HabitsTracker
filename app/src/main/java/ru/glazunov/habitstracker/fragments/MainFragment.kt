@@ -9,8 +9,8 @@ import androidx.navigation.findNavController
 import ru.glazunov.habitstracker.adapters.HabitsViewPagerAdapter
 import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.android.synthetic.main.fragment_main.*
-import ru.glazunov.habitstracker.Constants
-import ru.glazunov.habitstracker.HabitInfo
+import ru.glazunov.habitstracker.models.Constants
+import ru.glazunov.habitstracker.models.HabitInfo
 import ru.glazunov.habitstracker.R
 
 class MainFragment : Fragment() {

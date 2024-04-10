@@ -5,6 +5,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import kotlinx.android.synthetic.main.activity_main.*
+import ru.glazunov.habitstracker.models.Constants
+import ru.glazunov.habitstracker.models.HabitInfo
 
 
 class MainActivity : AppCompatActivity(), IHabitChangedCallback {

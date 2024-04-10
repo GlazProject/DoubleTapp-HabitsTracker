@@ -1,5 +1,7 @@
 package ru.glazunov.habitstracker
 
+import ru.glazunov.habitstracker.models.HabitInfo
+
 interface IHabitChangedCallback {
     fun onHabitChanged(
         position: Int?,

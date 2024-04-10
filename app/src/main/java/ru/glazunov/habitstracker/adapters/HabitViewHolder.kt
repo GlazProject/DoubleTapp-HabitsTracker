@@ -6,8 +6,8 @@ import android.view.View
 import androidx.navigation.NavController
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.view_habit_info.view.*
-import ru.glazunov.habitstracker.Constants
-import ru.glazunov.habitstracker.HabitInfo
+import ru.glazunov.habitstracker.models.Constants
+import ru.glazunov.habitstracker.models.HabitInfo
 import ru.glazunov.habitstracker.R
 
 class HabitViewHolder(

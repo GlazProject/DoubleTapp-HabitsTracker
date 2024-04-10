@@ -10,8 +10,8 @@ import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import ru.glazunov.habitstracker.adapters.HabitsRecyclerViewAdapter
 import kotlinx.android.synthetic.main.fragment_habit_list.*
-import ru.glazunov.habitstracker.Constants
-import ru.glazunov.habitstracker.HabitInfo
+import ru.glazunov.habitstracker.models.Constants
+import ru.glazunov.habitstracker.models.HabitInfo
 import ru.glazunov.habitstracker.IHabitChangedCallback
 import ru.glazunov.habitstracker.R
 

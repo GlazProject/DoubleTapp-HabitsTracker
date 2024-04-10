@@ -1,8 +1,9 @@
-package ru.glazunov.habitstracker
+package ru.glazunov.habitstracker.models
 
 import android.graphics.Color
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
+import java.util.*
 
 @Parcelize
 class HabitInfo(
@@ -12,5 +13,6 @@ class HabitInfo(
     val priority: String = "",
     val repeatsCount: Int = 0,
     val daysPeriod: Int = 0,
-    val color: Int = Color.WHITE
+    val color: Int = Color.WHITE,
+    val id: UUID = UUID.randomUUID()
 ): Parcelable

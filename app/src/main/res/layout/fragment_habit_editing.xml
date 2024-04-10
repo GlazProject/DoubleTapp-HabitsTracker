@@ -166,6 +166,13 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:clickable="false" />
+
+                    <TextView
+                        android:id="@+id/chosenColorValue"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="-9"
+                        android:visibility="invisible" />
                 </LinearLayout>
 
                 <HorizontalScrollView

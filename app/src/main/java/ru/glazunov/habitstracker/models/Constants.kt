@@ -1,4 +1,4 @@
-package ru.glazunov.habitstracker
+package ru.glazunov.habitstracker.models
 
 class Constants {
     class FieldNames {
