@@ -14,6 +14,7 @@ import ru.glazunov.habitstracker.repository.IHabitsRepository
 import ru.glazunov.habitstracker.repository.MemoryRepository
 import ru.glazunov.habitstracker.viewmodels.HabitEditingViewModel
 import ru.glazunov.habitstracker.viewmodels.HabitsListViewModel
+import java.util.logging.Logger
 
 
 class MainActivity : AppCompatActivity(), IHabitChangedCallback {
@@ -71,7 +72,6 @@ class MainActivity : AppCompatActivity(), IHabitChangedCallback {
     private fun onAppInfoMenuClick() = navController.navigate(R.id.appInfoFragment)
 
     override fun onHabitChanged() {
-        habitsListViewModel.notifyItemsChanged()
         navController.navigate(R.id.action_habitEditingFragment_to_mainFragment)
     }
 }

@@ -19,26 +19,25 @@ import androidx.core.view.doOnLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import kotlinx.android.synthetic.main.fragment_habit_editing.*
+import kotlinx.android.synthetic.main.view_habit_info.*
+import kotlinx.android.synthetic.main.view_habit_info.view.*
 import ru.glazunov.habitstracker.*
 import ru.glazunov.habitstracker.models.Constants
 import ru.glazunov.habitstracker.models.HabitInfo
 import ru.glazunov.habitstracker.models.HabitType
 import ru.glazunov.habitstracker.viewmodels.HabitEditingViewModel
+import java.util.UUID
 import kotlin.math.round
 
 class HabitEditingFragment : Fragment() {
     companion object {
         fun newInstance(
-            position: Int? = null,
             habitInfo: HabitInfo = HabitInfo()
         ): HabitEditingFragment {
             val fragment = HabitEditingFragment()
 
             val bundle = Bundle()
             bundle.putParcelable(Constants.FieldNames.HABIT_INFO, habitInfo)
-
-            if (position != null)
-                bundle.putInt(Constants.FieldNames.POSITION, position)
 
             fragment.arguments = bundle
             return fragment
@@ -159,6 +158,9 @@ class HabitEditingFragment : Fragment() {
 
 
     private fun updateViews(habitInfo: HabitInfo?) {
+        habitId.text = (habitInfo?.id ?: UUID.randomUUID()).toString()
+        chosenColorDisplay.setBackgroundColor(habitInfo?.color ?: Color.WHITE)
+        chosenColorValue.text = (habitInfo?.color ?: Color.WHITE).toString()
         habitName.setText(habitInfo?.name ?: "")
         habitDescription.setText(habitInfo?.description ?: "")
         habitType.check(getCheckedButtonId(habitType, getHabitTypeString(habitInfo?.type)))
@@ -190,6 +192,7 @@ class HabitEditingFragment : Fragment() {
             return
 
         habitInfo = HabitInfo(
+            id = UUID.fromString(habitId.text.toString()),
             name = habitName.text.toString(),
             description = habitDescription.text.toString(),
             type = getHabitType(),
