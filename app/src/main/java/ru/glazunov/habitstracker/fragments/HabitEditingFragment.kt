@@ -17,10 +17,13 @@ import androidx.core.graphics.red
 import androidx.core.view.children
 import androidx.core.view.doOnLayout
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import kotlinx.android.synthetic.main.fragment_habit_editing.*
 import ru.glazunov.habitstracker.*
 import ru.glazunov.habitstracker.models.Constants
 import ru.glazunov.habitstracker.models.HabitInfo
+import ru.glazunov.habitstracker.models.HabitType
+import ru.glazunov.habitstracker.viewmodels.HabitEditingViewModel
 import kotlin.math.round
 
 class HabitEditingFragment : Fragment() {
@@ -44,10 +47,7 @@ class HabitEditingFragment : Fragment() {
 
     private val colorPickerSquaresNumber = 16
     private var habitInfo = HabitInfo()
-    private var position: Int? = null
-
-    private var oldHabitInfo = HabitInfo()
-    private var oldposition: Int? = null
+    private val habitEditingViewModel: HabitEditingViewModel by activityViewModels()
 
     private var habitChangedCallback: IHabitChangedCallback? = null
 
@@ -80,10 +80,6 @@ class HabitEditingFragment : Fragment() {
         super.onSaveInstanceState(outState)
         saveUserInput()
         outState.putParcelable(Constants.FieldNames.HABIT_INFO, habitInfo)
-        outState.putParcelable(Constants.FieldNames.OLD_HABIT_INFO, oldHabitInfo)
-        outState.putInt(Constants.FieldNames.POSITION, position ?: -1)
-        outState.putInt(Constants.FieldNames.OLD_POSITION, oldposition ?: -1)
-
     }
 
     override fun onStart() {
@@ -93,9 +89,6 @@ class HabitEditingFragment : Fragment() {
 
     private fun restoreState(bundle: Bundle) {
         habitInfo = bundle.getParcelable(Constants.FieldNames.HABIT_INFO) ?: HabitInfo()
-        position = bundle.getInt(Constants.FieldNames.POSITION, -1)
-        oldHabitInfo = bundle.getParcelable(Constants.FieldNames.OLD_HABIT_INFO) ?: HabitInfo()
-        oldposition = bundle.getInt(Constants.FieldNames.OLD_POSITION, -1)
     }
 
     private fun createColorButtons() {
@@ -168,7 +161,7 @@ class HabitEditingFragment : Fragment() {
     private fun updateViews(habitInfo: HabitInfo?) {
         habitName.setText(habitInfo?.name ?: "")
         habitDescription.setText(habitInfo?.description ?: "")
-        habitType.check(getCheckedButtonId(habitType, habitInfo?.type))
+        habitType.check(getCheckedButtonId(habitType, getHabitTypeString(habitInfo?.type)))
         habitPriority.setSelection(getSelectedItemPosition(habitPriority, habitInfo?.priority))
         habitRepeatDays.setText(habitInfo?.daysPeriod.toString())
         habitRepeatsCount.setText(habitInfo?.repeatsCount.toString())
@@ -199,26 +192,36 @@ class HabitEditingFragment : Fragment() {
         habitInfo = HabitInfo(
             name = habitName.text.toString(),
             description = habitDescription.text.toString(),
-            type = habitType.findViewById<RadioButton>(habitType.checkedRadioButtonId).text.toString(),
+            type = getHabitType(),
             repeatsCount = habitRepeatsCount.text.toString().toIntOrNull() ?: 0,
             daysPeriod = habitRepeatDays.text.toString().toIntOrNull() ?: 0,
             priority = habitPriority.selectedItem.toString(),
             color =  chosenColorValue.text.toString().toIntOrNull() ?: Color.WHITE
         )
+    }
 
+    private fun getHabitType(): HabitType =
+        when(habitType.findViewById<RadioButton>(habitType.checkedRadioButtonId).text.toString()){
+            getString(R.string.positive_habit) -> HabitType.POSITIVE
+            getString(R.string.negative_habit) -> HabitType.NEGATIVE
+            else -> throw IndexOutOfBoundsException()
+        }
+
+    private fun getHabitTypeString(type: HabitType?): String{
+        return when (type){
+            HabitType.POSITIVE -> getString(R.string.positive_habit)
+            HabitType.NEGATIVE-> getString(R.string.negative_habit)
+            else -> getString(R.string.positive_habit)
+        }
     }
 
     private fun onSaveClick(view: View) {
         saveUserInput()
-        (habitChangedCallback as IHabitChangedCallback).onHabitChanged(
-            position,
-            habitInfo,
-            oldHabitInfo,
-            oldposition
-        )
+        habitEditingViewModel.changeHabit(habitInfo)
+        (habitChangedCallback as IHabitChangedCallback).onHabitChanged() // возможно не нужно
     }
 
     private fun onCancelClick(view: View) {
-        (habitChangedCallback as IHabitChangedCallback).onHabitChanged(null, null, null, null)
+        (habitChangedCallback as IHabitChangedCallback).onHabitChanged()
     }
 }

@@ -1,41 +1,21 @@
 package ru.glazunov.habitstracker.fragments
 
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import ru.glazunov.habitstracker.adapters.HabitsRecyclerViewAdapter
 import kotlinx.android.synthetic.main.fragment_habit_list.*
-import ru.glazunov.habitstracker.models.Constants
-import ru.glazunov.habitstracker.models.HabitInfo
-import ru.glazunov.habitstracker.IHabitChangedCallback
 import ru.glazunov.habitstracker.R
+import ru.glazunov.habitstracker.viewmodels.HabitsListViewModel
 
 class HabitListFragment : Fragment() {
-    companion object {
-        fun newInstance(
-            habitInfos: ArrayList<HabitInfo> = arrayListOf()
-        ): HabitListFragment {
-            val fragment = HabitListFragment()
-            val bundle = Bundle()
-            bundle.putParcelableArrayList(Constants.FieldNames.HABIT_INFOS, habitInfos)
-            fragment.arguments = bundle
-            return fragment
-        }
-    }
-
-    private var habitInfos: ArrayList<HabitInfo> = arrayListOf()
-    private var habitChangedCallback: IHabitChangedCallback? = null
+    private val viewModel: HabitsListViewModel by activityViewModels()
     private lateinit var viewAdapter: HabitsRecyclerViewAdapter
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        habitChangedCallback = activity as IHabitChangedCallback
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -45,13 +25,9 @@ class HabitListFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        arguments?.let {
-            habitInfos = it.getParcelableArrayList(Constants.FieldNames.HABIT_INFOS) ?: arrayListOf()
-        }
-
         val viewManager = LinearLayoutManager(context)
         viewAdapter = HabitsRecyclerViewAdapter(
-                habitInfos,
+                viewModel.habits.value?: arrayListOf(),
                 requireActivity().findNavController(R.id.nav_host_fragment)
             )
 

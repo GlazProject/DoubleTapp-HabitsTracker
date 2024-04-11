@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.findNavController
 import ru.glazunov.habitstracker.adapters.HabitsViewPagerAdapter
 import com.google.android.material.tabs.TabLayoutMediator
@@ -12,12 +13,12 @@ import kotlinx.android.synthetic.main.fragment_main.*
 import ru.glazunov.habitstracker.models.Constants
 import ru.glazunov.habitstracker.models.HabitInfo
 import ru.glazunov.habitstracker.R
+import ru.glazunov.habitstracker.viewmodels.HabitsListViewModel
 
-class MainFragment : Fragment() {
-    private lateinit var viewAdapter: HabitsViewPagerAdapter
-    private var positiveHabitInfos: ArrayList<HabitInfo> = arrayListOf()
-    private var negativeHabitInfos: ArrayList<HabitInfo> = arrayListOf()
+class MainFragment: Fragment() {
+    private val viewModel: HabitsListViewModel by activityViewModels()
     private var editingFragment: HabitEditingFragment? = null
+    private lateinit var viewAdapter: HabitsViewPagerAdapter
     private lateinit var habitsTypesList: ArrayList<String>
 
     override fun onCreateView(
@@ -32,17 +33,11 @@ class MainFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         fab.setOnClickListener(this::onFabClick)
-        arguments?.let {
-            positiveHabitInfos =
-                it.getParcelableArrayList(Constants.FieldNames.POSITIVE_HABIT_INFOS) ?: arrayListOf()
-            negativeHabitInfos =
-                it.getParcelableArrayList(Constants.FieldNames.NEGATIVE_HABIT_INFOS) ?: arrayListOf()
-        }
         viewAdapter = HabitsViewPagerAdapter(
-            positiveHabitInfos,
-            negativeHabitInfos,
+            viewModel,
             this
         )
+
         val viewPager = mainPager
         viewPager.adapter = viewAdapter
         val tabLayout = tabs

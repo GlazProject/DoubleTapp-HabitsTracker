@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import ru.glazunov.habitstracker.models.HabitInfo
+import ru.glazunov.habitstracker.models.HabitType
 import ru.glazunov.habitstracker.models.Ordering
 import ru.glazunov.habitstracker.repository.IHabitsRepository
 
@@ -25,6 +26,14 @@ class HabitsListViewModel(private val model: IHabitsRepository): ViewModel() {
 
     fun selectByName(name: String) {
         processedHabits.value = ArrayList( baseHabits.filter { habit -> habit.name.startsWith(name) } )
+    }
+
+    fun selectPositive() {
+        processedHabits.value = ArrayList( baseHabits.filter { habit -> habit.type == HabitType.POSITIVE } )
+    }
+
+    fun selectNegative() {
+        processedHabits.value = ArrayList( baseHabits.filter { habit -> habit.type == HabitType.NEGATIVE } )
     }
 
     fun orderByName(ordering: Ordering) {
