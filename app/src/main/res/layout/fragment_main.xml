@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -22,6 +22,10 @@
             android:layout_height="match_parent" />
     </LinearLayout>
 
+
+
+    <include layout="@layout/fragment_bottom_sheet" />
+
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab"
         android:layout_width="75dp"
@@ -30,9 +34,10 @@
         android:layout_margin="20dp"
         android:tint="@android:color/white"
         app:fabCustomSize="75dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
+        app:layout_anchor="@id/bottom_sheet"
+        app:layout_anchorGravity="top|end"
         app:maxImageSize="50dp"
         app:srcCompat="@android:drawable/ic_input_add"
         android:contentDescription="@string/add_new_habit" />
-</androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
