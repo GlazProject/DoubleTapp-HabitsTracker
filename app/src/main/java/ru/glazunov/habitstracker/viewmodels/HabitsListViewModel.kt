@@ -1,5 +1,6 @@
 package ru.glazunov.habitstracker.viewmodels
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -7,6 +8,7 @@ import ru.glazunov.habitstracker.models.HabitInfo
 import ru.glazunov.habitstracker.models.HabitType
 import ru.glazunov.habitstracker.models.Ordering
 import ru.glazunov.habitstracker.repository.IHabitsRepository
+import java.util.Locale.filter
 
 class HabitsListViewModel(private val model: IHabitsRepository): ViewModel() {
     private lateinit var baseHabits: ArrayList<HabitInfo>
@@ -25,7 +27,10 @@ class HabitsListViewModel(private val model: IHabitsRepository): ViewModel() {
     }
 
     fun selectByName(name: String) {
-        processedHabits.value = ArrayList( baseHabits.filter { habit -> habit.name.startsWith(name) } )
+        processedHabits.value =
+            processedHabits.value?.filter { habit -> habit.name.startsWith(name, true) }
+                ?.let { ArrayList(it) }
+        Log.d(this::class.java.canonicalName, "Was selected by name $name")
     }
 
     fun selectPositive() {
@@ -38,9 +43,10 @@ class HabitsListViewModel(private val model: IHabitsRepository): ViewModel() {
 
     fun orderByName(ordering: Ordering) {
         processedHabits.value = when(ordering){
-            Ordering.Ascending -> ArrayList(processedHabits.value!!.sortedBy { it.name })
-            Ordering.Descending -> ArrayList(processedHabits.value!!.sortedByDescending { it.name })
+            Ordering.Ascending -> processedHabits.value?.sortedBy { it.name }?.let { ArrayList(it) }
+            Ordering.Descending -> processedHabits.value?.sortedByDescending { it.name }?.let { ArrayList(it) }
         }
+        Log.d(this::class.java.canonicalName, "Was ordered by $ordering")
     }
 
     fun notifyItemsChanged() {

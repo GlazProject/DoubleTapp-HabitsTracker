@@ -1,5 +1,6 @@
 package ru.glazunov.habitstracker.repository
 
+import android.content.res.Resources.NotFoundException
 import ru.glazunov.habitstracker.models.HabitInfo
 import ru.glazunov.habitstracker.models.HabitType
 import java.util.*
@@ -13,6 +14,7 @@ class MemoryRepository: IHabitsRepository {
     }
 
     override fun getHabits(): ArrayList<HabitInfo> = ArrayList(habits.values)
+    override fun getHabit(id: UUID): HabitInfo = habits[id] ?: throw NotFoundException()
 
     override fun getPositiveHabits(): ArrayList<HabitInfo> =
         ArrayList(habits.values.filter { habit ->  habit.type == HabitType.POSITIVE })

@@ -34,7 +34,7 @@ class MainActivity : AppCompatActivity(), IHabitChangedCallback {
 
         habitEditingViewModel = ViewModelProvider(this, object : ViewModelProvider.Factory {
             override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                return HabitEditingViewModel(habitRepository, habitsListViewModel) as T
+                return HabitEditingViewModel(habitRepository) as T
             }
         }).get(HabitEditingViewModel::class.java)
 
@@ -72,6 +72,7 @@ class MainActivity : AppCompatActivity(), IHabitChangedCallback {
     private fun onAppInfoMenuClick() = navController.navigate(R.id.appInfoFragment)
 
     override fun onHabitChanged() {
+        habitsListViewModel.notifyItemsChanged()
         navController.navigate(R.id.action_habitEditingFragment_to_mainFragment)
     }
 }

@@ -8,7 +8,7 @@ import ru.glazunov.habitstracker.models.HabitInfo
 import ru.glazunov.habitstracker.R
 
 class HabitsRecyclerViewAdapter(
-    private val habitsInfos: MutableList<HabitInfo>,
+    private val habitsInfos: ArrayList<HabitInfo>,
     private val navController: NavController
 ) : RecyclerView.Adapter<HabitViewHolder>() {
 

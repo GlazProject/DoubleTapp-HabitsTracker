@@ -35,8 +35,7 @@ class HabitViewHolder(
 
     override fun onClick(v: View?) {
         val bundle = Bundle()
-        bundle.putParcelable(Constants.FieldNames.HABIT_INFO, habitInfo)
-        bundle.putInt(Constants.FieldNames.POSITION, position ?: -1)
+        bundle.putString(Constants.FieldNames.ID, habitInfo.id.toString())
         navController.navigate(R.id.action_mainFragment_to_habitEditingFragment, bundle)
     }
 

@@ -4,15 +4,15 @@ import androidx.lifecycle.ViewModel
 import ru.glazunov.habitstracker.models.HabitInfo
 import ru.glazunov.habitstracker.models.Ordering
 import ru.glazunov.habitstracker.repository.IHabitsRepository
+import java.util.*
 
 class HabitEditingViewModel(
     private val model: IHabitsRepository,
-    private val habitsListViewModel: HabitsListViewModel
 ) : ViewModel() {
+
+    fun getHabit(id: UUID) = model.getHabit(id)
 
     fun changeHabit(habitInfo: HabitInfo) {
         model.putHabit(habitInfo)
-        habitsListViewModel.notifyItemsChanged()
-        habitsListViewModel.orderByName(Ordering.Descending)
     }
 }

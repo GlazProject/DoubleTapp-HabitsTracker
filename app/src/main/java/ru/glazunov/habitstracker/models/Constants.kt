@@ -8,6 +8,7 @@ class Constants {
             const val NAV_CONTROLLER_STATE = "navControllerState"
 
             const val HABIT_INFO = "habitInfo"
+            const val ID = "id";
             const val HABIT_INFOS = "habitInfos"
 
             const val POSITION = "position"

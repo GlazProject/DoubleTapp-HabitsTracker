@@ -19,8 +19,6 @@ import androidx.core.view.doOnLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import kotlinx.android.synthetic.main.fragment_habit_editing.*
-import kotlinx.android.synthetic.main.view_habit_info.*
-import kotlinx.android.synthetic.main.view_habit_info.view.*
 import ru.glazunov.habitstracker.*
 import ru.glazunov.habitstracker.models.Constants
 import ru.glazunov.habitstracker.models.HabitInfo
@@ -30,23 +28,9 @@ import java.util.UUID
 import kotlin.math.round
 
 class HabitEditingFragment : Fragment() {
-    companion object {
-        fun newInstance(
-            habitInfo: HabitInfo = HabitInfo()
-        ): HabitEditingFragment {
-            val fragment = HabitEditingFragment()
-
-            val bundle = Bundle()
-            bundle.putParcelable(Constants.FieldNames.HABIT_INFO, habitInfo)
-
-            fragment.arguments = bundle
-            return fragment
-        }
-    }
-
     private val colorPickerSquaresNumber = 16
     private var habitInfo = HabitInfo()
-    private val habitEditingViewModel: HabitEditingViewModel by activityViewModels()
+    private val viewModel: HabitEditingViewModel by activityViewModels()
 
     private var habitChangedCallback: IHabitChangedCallback? = null
 
@@ -64,9 +48,9 @@ class HabitEditingFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         if (savedInstanceState != null)
-            restoreState(savedInstanceState)
+            loadHabit(savedInstanceState)
         else
-            arguments?.let { restoreState(it) }
+            arguments?.let { loadHabit(it) }
 
         setListeners()
         chosenColorDisplay.setBackgroundColor(habitInfo.color)
@@ -78,7 +62,7 @@ class HabitEditingFragment : Fragment() {
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         saveUserInput()
-        outState.putParcelable(Constants.FieldNames.HABIT_INFO, habitInfo)
+        outState.putString(Constants.FieldNames.ID, habitInfo.id.toString())
     }
 
     override fun onStart() {
@@ -86,8 +70,9 @@ class HabitEditingFragment : Fragment() {
         updateViews(habitInfo)
     }
 
-    private fun restoreState(bundle: Bundle) {
-        habitInfo = bundle.getParcelable(Constants.FieldNames.HABIT_INFO) ?: HabitInfo()
+    private fun loadHabit(bundle: Bundle) {
+        val id = UUID.fromString(bundle.getString(Constants.FieldNames.ID))
+        habitInfo = viewModel.getHabit(id)
     }
 
     private fun createColorButtons() {
@@ -156,9 +141,7 @@ class HabitEditingFragment : Fragment() {
         cancelButton.setOnClickListener(this::onCancelClick)
     }
 
-
     private fun updateViews(habitInfo: HabitInfo?) {
-        habitId.text = (habitInfo?.id ?: UUID.randomUUID()).toString()
         chosenColorDisplay.setBackgroundColor(habitInfo?.color ?: Color.WHITE)
         chosenColorValue.text = (habitInfo?.color ?: Color.WHITE).toString()
         habitName.setText(habitInfo?.name ?: "")
@@ -192,7 +175,7 @@ class HabitEditingFragment : Fragment() {
             return
 
         habitInfo = HabitInfo(
-            id = UUID.fromString(habitId.text.toString()),
+            id = habitInfo.id,
             name = habitName.text.toString(),
             description = habitDescription.text.toString(),
             type = getHabitType(),
@@ -220,8 +203,8 @@ class HabitEditingFragment : Fragment() {
 
     private fun onSaveClick(view: View) {
         saveUserInput()
-        habitEditingViewModel.changeHabit(habitInfo)
-        (habitChangedCallback as IHabitChangedCallback).onHabitChanged() // возможно не нужно
+        viewModel.changeHabit(habitInfo)
+        (habitChangedCallback as IHabitChangedCallback).onHabitChanged()
     }
 
     private fun onCancelClick(view: View) {
