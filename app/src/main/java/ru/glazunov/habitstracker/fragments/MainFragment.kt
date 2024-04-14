@@ -38,6 +38,7 @@ class MainFragment: Fragment() {
         super.onViewCreated(view, savedInstanceState)
         fab.setOnClickListener(this::onFabClick)
 
+        // Если это переносить в BottomSheetFragment, то перестаёт работать :(((
         BottomSheetBehavior.from(bottom_sheet).state = BottomSheetBehavior.STATE_EXPANDED
         searchEdit.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {

@@ -1,5 +1,6 @@
 package ru.glazunov.habitstracker.adapters
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.navigation.NavController
@@ -8,7 +9,7 @@ import ru.glazunov.habitstracker.models.HabitInfo
 import ru.glazunov.habitstracker.R
 
 class HabitsRecyclerViewAdapter(
-    private val habitsInfos: ArrayList<HabitInfo>,
+    private var habitsInfos: List<HabitInfo>,
     private val navController: NavController
 ) : RecyclerView.Adapter<HabitViewHolder>() {
 
@@ -34,4 +35,10 @@ class HabitsRecyclerViewAdapter(
     }
 
     override fun getItemCount() = habitsInfos.size
+
+    @SuppressLint("NotifyDataSetChanged")
+    fun setHabitInfos(habits: List<HabitInfo>) {
+        habitsInfos = habits
+        notifyDataSetChanged()
+    }
 }

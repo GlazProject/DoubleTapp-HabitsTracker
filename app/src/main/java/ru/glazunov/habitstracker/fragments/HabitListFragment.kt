@@ -1,5 +1,6 @@
 package ru.glazunov.habitstracker.fragments
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
 import android.util.Log
@@ -11,6 +12,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import kotlinx.android.synthetic.main.fragment_habit_editing.*
 import kotlinx.android.synthetic.main.fragment_habit_list.*
 import ru.glazunov.habitstracker.IHabitChangedCallback
 import ru.glazunov.habitstracker.R
@@ -35,20 +37,24 @@ class HabitListFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_habit_list, container, false)
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.habits.observe(viewLifecycleOwner, Observer { habits ->
-            val viewAdapter = HabitsRecyclerViewAdapter(
-                habits,
+        val viewAdapter =
+            HabitsRecyclerViewAdapter(
+                viewModel.habits.value ?: listOf(),
                 requireActivity().findNavController(R.id.nav_host_fragment)
             )
-            Log.d(this::class.java.canonicalName, "Update habits state")
-            habitsRecyclerView.apply {
-                setHasFixedSize(true)
-                layoutManager = LinearLayoutManager(context)
-                adapter = viewAdapter
-            }
+        habitsRecyclerView.apply {
+            setHasFixedSize(true)
+            layoutManager = LinearLayoutManager(context)
+            adapter = viewAdapter
+        }
+
+        viewModel.habits.observe(viewLifecycleOwner, Observer { habits ->
+            Log.d(this::class.java.canonicalName, "Update habits list")
+            viewAdapter.setHabitInfos(habits)
         })
     }
 }
