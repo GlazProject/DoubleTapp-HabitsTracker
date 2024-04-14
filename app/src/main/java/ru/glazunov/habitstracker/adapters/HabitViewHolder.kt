@@ -15,9 +15,7 @@ class HabitViewHolder(
     private val view: View,
     private val context: Context,
     private val navController: NavController,
-    var position: Int?
 ) : RecyclerView.ViewHolder(view), View.OnClickListener {
-
     var habitInfo = HabitInfo()
 
     init {

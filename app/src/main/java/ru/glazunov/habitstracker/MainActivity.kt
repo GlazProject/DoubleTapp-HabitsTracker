@@ -6,19 +6,15 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
+import androidx.room.Room
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.view_habit_info.*
 import ru.glazunov.habitstracker.models.Constants
-import ru.glazunov.habitstracker.models.HabitInfo
-import ru.glazunov.habitstracker.repository.IHabitsRepository
-import ru.glazunov.habitstracker.repository.MemoryRepository
+import ru.glazunov.habitstracker.repository.HabitsDatabase
 import ru.glazunov.habitstracker.viewmodels.HabitEditingViewModel
 import ru.glazunov.habitstracker.viewmodels.HabitsListViewModel
-import java.util.logging.Logger
 
 
 class MainActivity : AppCompatActivity(), IHabitChangedCallback {
-    private val habitRepository: IHabitsRepository = MemoryRepository()
     private lateinit var habitsListViewModel: HabitsListViewModel
     private lateinit var habitEditingViewModel: HabitEditingViewModel
     private lateinit var navController: NavController
@@ -26,15 +22,22 @@ class MainActivity : AppCompatActivity(), IHabitChangedCallback {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        val db = Room.databaseBuilder(
+            applicationContext,
+            HabitsDatabase::class.java,
+            "HabitsDatabase"
+        ).allowMainThreadQueries().build()
+        val repository = db.habitsDao()
+
         habitsListViewModel = ViewModelProvider(this, object : ViewModelProvider.Factory {
             override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                return HabitsListViewModel(habitRepository) as T
+                return HabitsListViewModel(repository, this@MainActivity) as T
             }
         }).get(HabitsListViewModel::class.java)
 
         habitEditingViewModel = ViewModelProvider(this, object : ViewModelProvider.Factory {
             override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                return HabitEditingViewModel(habitRepository) as T
+                return HabitEditingViewModel(repository) as T
             }
         }).get(HabitEditingViewModel::class.java)
 
@@ -72,7 +75,6 @@ class MainActivity : AppCompatActivity(), IHabitChangedCallback {
     private fun onAppInfoMenuClick() = navController.navigate(R.id.appInfoFragment)
 
     override fun onHabitChanged() {
-        habitsListViewModel.notifyItemsChanged()
         navController.navigate(R.id.action_habitEditingFragment_to_mainFragment)
     }
 }

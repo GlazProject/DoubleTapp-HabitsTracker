@@ -9,9 +9,9 @@ import ru.glazunov.habitstracker.models.HabitInfo
 import ru.glazunov.habitstracker.R
 
 class HabitsRecyclerViewAdapter(
-    private var habitsInfos: List<HabitInfo>,
     private val navController: NavController
 ) : RecyclerView.Adapter<HabitViewHolder>() {
+    private var habitsInfos: List<HabitInfo> = arrayListOf()
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -23,15 +23,13 @@ class HabitsRecyclerViewAdapter(
         return HabitViewHolder(
             view,
             parent.context,
-            navController,
-            null
+            navController
         )
     }
 
     override fun onBindViewHolder(holder: HabitViewHolder, position: Int) {
         holder.bind(habitsInfos[position])
         holder.habitInfo = habitsInfos[position]
-        holder.position = position
     }
 
     override fun getItemCount() = habitsInfos.size
