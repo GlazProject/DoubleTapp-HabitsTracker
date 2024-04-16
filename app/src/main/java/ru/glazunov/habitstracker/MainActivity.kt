@@ -14,7 +14,7 @@ import ru.glazunov.habitstracker.viewmodels.HabitEditingViewModel
 import ru.glazunov.habitstracker.viewmodels.HabitsListViewModel
 
 
-class MainActivity : AppCompatActivity(), IHabitChangedCallback {
+class MainActivity : AppCompatActivity() {
     private lateinit var habitsListViewModel: HabitsListViewModel
     private lateinit var habitEditingViewModel: HabitEditingViewModel
     private lateinit var navController: NavController
@@ -22,22 +22,15 @@ class MainActivity : AppCompatActivity(), IHabitChangedCallback {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val db = Room.databaseBuilder(
-            applicationContext,
-            HabitsDatabase::class.java,
-            "HabitsDatabase"
-        ).allowMainThreadQueries().build()
-        val repository = db.habitsDao()
-
         habitsListViewModel = ViewModelProvider(this, object : ViewModelProvider.Factory {
             override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                return HabitsListViewModel(repository, this@MainActivity) as T
+                return HabitsListViewModel(applicationContext, this@MainActivity) as T
             }
         }).get(HabitsListViewModel::class.java)
 
         habitEditingViewModel = ViewModelProvider(this, object : ViewModelProvider.Factory {
             override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                return HabitEditingViewModel(repository) as T
+                return HabitEditingViewModel(applicationContext) as T
             }
         }).get(HabitEditingViewModel::class.java)
 
@@ -73,8 +66,4 @@ class MainActivity : AppCompatActivity(), IHabitChangedCallback {
     private fun onHabitsListMenuClick() = navController.navigate(R.id.mainFragment)
 
     private fun onAppInfoMenuClick() = navController.navigate(R.id.appInfoFragment)
-
-    override fun onHabitChanged() {
-        navController.navigate(R.id.action_habitEditingFragment_to_mainFragment)
-    }
 }

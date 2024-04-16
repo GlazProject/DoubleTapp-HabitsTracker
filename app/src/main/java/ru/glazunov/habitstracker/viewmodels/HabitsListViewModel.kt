@@ -1,5 +1,6 @@
 package ru.glazunov.habitstracker.viewmodels
 
+import android.content.Context
 import android.util.Log
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
@@ -9,13 +10,14 @@ import ru.glazunov.habitstracker.models.HabitInfo
 import ru.glazunov.habitstracker.models.HabitListViewModelState
 import ru.glazunov.habitstracker.models.HabitType
 import ru.glazunov.habitstracker.models.Ordering
-import ru.glazunov.habitstracker.repository.IHabitsRepository
+import ru.glazunov.habitstracker.repository.HabitsDatabase
 
 class HabitsListViewModel(
-    model: IHabitsRepository,
+    context: Context,
     lifecycleOwner: LifecycleOwner
 ): ViewModel() {
     private val state = HabitListViewModelState()
+    private val model = HabitsDatabase.getInstance(context).habitsDao()
 
     private var baseHabits: List<HabitInfo> = arrayListOf()
     private val processedHabits: MutableLiveData<List<HabitInfo>> = MutableLiveData()

@@ -3,6 +3,7 @@ package ru.glazunov.habitstracker.repository
 import androidx.lifecycle.LiveData
 import androidx.room.*
 import ru.glazunov.habitstracker.models.HabitInfo
+import ru.glazunov.habitstracker.models.HabitType
 import java.util.*
 
 @Dao
@@ -16,9 +17,10 @@ interface HabitsDao : IHabitsRepository {
     @Query("SELECT * FROM HabitInfo WHERE id = :id")
     override fun getHabit(id: UUID) : HabitInfo
 
-    @Query("SELECT * FROM HabitInfo WHERE type = 'POSITIVE'")
-    override fun getPositiveHabits() : LiveData<List<HabitInfo>>
+    override fun getPositiveHabits() = getHabitsByType(HabitType.POSITIVE)
 
-    @Query("SELECT * FROM HabitInfo WHERE type = 'NEGATIVE'")
-    override fun getNegativeHabits() : LiveData<List<HabitInfo>>
+    override fun getNegativeHabits() = getHabitsByType(HabitType.NEGATIVE)
+
+    @Query("SELECT * FROM HabitInfo WHERE type = :habitType")
+    fun getHabitsByType(habitType: HabitType): LiveData<List<HabitInfo>>
 }

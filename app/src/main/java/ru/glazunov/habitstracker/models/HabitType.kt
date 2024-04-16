@@ -1,6 +1,6 @@
 package ru.glazunov.habitstracker.models
 
-enum class HabitType {
+enum class HabitType() {
     POSITIVE,
     NEGATIVE
 }

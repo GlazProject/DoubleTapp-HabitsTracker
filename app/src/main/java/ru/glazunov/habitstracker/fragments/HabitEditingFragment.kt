@@ -18,7 +18,11 @@ import androidx.core.view.children
 import androidx.core.view.doOnLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.findNavController
 import kotlinx.android.synthetic.main.fragment_habit_editing.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import ru.glazunov.habitstracker.*
 import ru.glazunov.habitstracker.models.Constants
 import ru.glazunov.habitstracker.models.HabitInfo
@@ -31,13 +35,7 @@ class HabitEditingFragment : Fragment() {
     private val colorPickerSquaresNumber = 16
     private var habitInfo = HabitInfo()
     private val viewModel: HabitEditingViewModel by activityViewModels()
-
-    private var habitChangedCallback: IHabitChangedCallback? = null
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        habitChangedCallback = activity as IHabitChangedCallback
-    }
+    private val navController = requireActivity().findNavController(R.id.nav_host_fragment)
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -72,7 +70,9 @@ class HabitEditingFragment : Fragment() {
 
     private fun loadHabit(bundle: Bundle) {
         val id = UUID.fromString(bundle.getString(Constants.FieldNames.ID))
-        habitInfo = viewModel.getHabit(id)
+        GlobalScope.launch {
+            habitInfo = viewModel.getHabit(id)
+        }
     }
 
     private fun createColorButtons() {
@@ -203,11 +203,13 @@ class HabitEditingFragment : Fragment() {
 
     private fun onSaveClick(view: View) {
         saveUserInput()
-        viewModel.changeHabit(habitInfo)
-        (habitChangedCallback as IHabitChangedCallback).onHabitChanged()
+        GlobalScope.launch {
+            viewModel.changeHabit(habitInfo)
+        }
+        navController.navigate(R.id.action_habitEditingFragment_to_mainFragment)
     }
 
     private fun onCancelClick(view: View) {
-        (habitChangedCallback as IHabitChangedCallback).onHabitChanged()
+        navController.navigate(R.id.action_habitEditingFragment_to_mainFragment)
     }
 }
