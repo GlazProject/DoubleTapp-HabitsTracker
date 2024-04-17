@@ -64,6 +64,7 @@ class MainFragment: Fragment() {
         }.attach()
     }
 
+    @Suppress("UNUSED_PARAMETER")
     private fun onFabClick(view: View) {
         requireActivity().findNavController(R.id.nav_host_fragment)
             .navigate(R.id.action_mainFragment_to_habitEditingFragment)
