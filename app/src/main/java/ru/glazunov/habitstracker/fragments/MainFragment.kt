@@ -22,7 +22,6 @@ import ru.glazunov.habitstracker.viewmodels.HabitsListViewModel
 
 class MainFragment: Fragment() {
     private lateinit var habitsTypesList: ArrayList<String>
-//    private val viewModel: HabitsListViewModel by activityViewModels()
     private val viewModel: HabitsListViewModel by viewModels {
     HabitsListViewModel.provideFactory(
         HabitsDatabase.getInstance(requireActivity().applicationContext).habitsDao(),

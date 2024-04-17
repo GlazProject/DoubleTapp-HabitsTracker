@@ -39,14 +39,9 @@ class HabitListFragment(
             adapter = viewAdapter
         }
 
-        viewModel.habits.observe(viewLifecycleOwner) { habits ->
+        viewModel.habits(type).observe(viewLifecycleOwner) { habits ->
             Log.d(this::class.java.canonicalName, "Update habits list")
             viewAdapter.setHabitInfos(habits)
         }
-    }
-
-    override fun onResume() {
-        super.onResume()
-        viewModel.selectByType(type)
     }
 }

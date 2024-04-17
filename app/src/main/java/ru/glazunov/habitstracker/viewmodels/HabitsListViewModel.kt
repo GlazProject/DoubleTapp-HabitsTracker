@@ -9,10 +9,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.savedstate.SavedStateRegistryOwner
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import ru.glazunov.habitstracker.models.HabitInfo
 import ru.glazunov.habitstracker.models.HabitListViewModelState
 import ru.glazunov.habitstracker.models.HabitType
@@ -24,12 +20,9 @@ class HabitsListViewModel(
     lifecycleOwner: LifecycleOwner
 ): ViewModel() {
     private val state = HabitListViewModelState()
-//    private val model = HabitsDatabase.getInstance(context).habitsDao()
-
+    private val positiveProcessedHabits: MutableLiveData<List<HabitInfo>> = MutableLiveData()
+    private val negativeProcessedHabits: MutableLiveData<List<HabitInfo>> = MutableLiveData()
     private var baseHabits: List<HabitInfo> = arrayListOf()
-    private val processedHabits: MutableLiveData<List<HabitInfo>> = MutableLiveData()
-
-    val habits: LiveData<List<HabitInfo>> = processedHabits
 
     init {
         model.getHabits().observe(lifecycleOwner) { habits ->
@@ -38,13 +31,14 @@ class HabitsListViewModel(
         }
     }
 
+    fun habits(type: HabitType): LiveData<List<HabitInfo>> =
+        when (type) {
+            HabitType.NEGATIVE -> negativeProcessedHabits
+            HabitType.POSITIVE -> positiveProcessedHabits
+        }
+
     fun selectByName(name: String){
         state.searchPrefix = name
-        selectByState()
-    }
-
-    fun selectByType(type: HabitType) {
-        state.habitType = type
         selectByState()
     }
 
@@ -53,32 +47,31 @@ class HabitsListViewModel(
         selectByState()
     }
 
-    private fun selectByNamePrefixInternal(name: String) {
+    private fun selectByNamePrefixInternal(name: String, data: MutableLiveData<List<HabitInfo>>) {
         if (name.isEmpty() || name.isBlank())
             return
 
-        processedHabits.value =
-            processedHabits.value?.filter { habit -> habit.name.startsWith(name, true) }
+        data.value = data.value?.filter { habit -> habit.name.startsWith(name, true) }
                 ?.let { ArrayList(it) }
         Log.d(this::class.java.canonicalName, "Was selected by name $name")
     }
 
-    private fun orderByNameInternal(ordering: Ordering) {
-        processedHabits.value = when(ordering){
-            Ordering.Ascending -> processedHabits.value?.sortedBy { it.name }?.let { ArrayList(it) }
-            Ordering.Descending -> processedHabits.value?.sortedByDescending { it.name }?.let { ArrayList(it) }
+    private fun orderByNameInternal(ordering: Ordering, data: MutableLiveData<List<HabitInfo>>) {
+        data.value = when(ordering){
+            Ordering.Ascending -> data.value?.sortedBy { it.name }?.let { ArrayList(it) }
+            Ordering.Descending -> data.value?.sortedByDescending { it.name }?.let { ArrayList(it) }
         }
         Log.d(this::class.java.canonicalName, "Was ordered by $ordering")
     }
 
-    private fun selectByTypeInternal(habitType: HabitType){
-        processedHabits.value = ArrayList( baseHabits.filter { habit -> habit.type == habitType } )
-    }
-
     private fun selectByState(){
-        selectByTypeInternal(state.habitType)
-        selectByNamePrefixInternal(state.searchPrefix)
-        orderByNameInternal(state.ordering)
+        positiveProcessedHabits.value =baseHabits.filter { habit -> habit.type == HabitType.POSITIVE }
+        negativeProcessedHabits.value = baseHabits.filter { habit -> habit.type == HabitType.NEGATIVE }
+
+        selectByNamePrefixInternal(state.searchPrefix, positiveProcessedHabits)
+        selectByNamePrefixInternal(state.searchPrefix, negativeProcessedHabits)
+        orderByNameInternal(state.ordering, positiveProcessedHabits)
+        orderByNameInternal(state.ordering, negativeProcessedHabits)
     }
 
     companion object {

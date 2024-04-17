@@ -45,4 +45,6 @@
     <string name="search">Поиск</string>
     <string name="filter_by_name">Отсортировать по названию</string>
     <string name="priprityOrderingName">Отсортировать по приоритету</string>
+    <string name="descending">А-Я</string>
+    <string name="ascending">Я-А</string>
 </resources>
