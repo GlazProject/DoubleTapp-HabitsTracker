@@ -18,8 +18,11 @@ import androidx.core.view.children
 import androidx.core.view.doOnLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import kotlinx.android.synthetic.main.fragment_habit_editing.*
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -27,6 +30,7 @@ import ru.glazunov.habitstracker.*
 import ru.glazunov.habitstracker.models.Constants
 import ru.glazunov.habitstracker.models.HabitInfo
 import ru.glazunov.habitstracker.models.HabitType
+import ru.glazunov.habitstracker.repository.HabitsDatabase
 import ru.glazunov.habitstracker.viewmodels.HabitEditingViewModel
 import java.util.UUID
 import kotlin.math.round
@@ -34,8 +38,13 @@ import kotlin.math.round
 class HabitEditingFragment : Fragment() {
     private val colorPickerSquaresNumber = 16
     private var habitInfo = HabitInfo()
-    private val viewModel: HabitEditingViewModel by activityViewModels()
-    private val navController = requireActivity().findNavController(R.id.nav_host_fragment)
+//    private val viewModel: HabitEditingViewModel by activityViewModels()
+    private val viewModel: HabitEditingViewModel by viewModels {
+        HabitEditingViewModel.provideFactory(
+            HabitsDatabase.getInstance(requireContext()).habitsDao(),
+            this
+        )
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -70,7 +79,7 @@ class HabitEditingFragment : Fragment() {
 
     private fun loadHabit(bundle: Bundle) {
         val id = UUID.fromString(bundle.getString(Constants.FieldNames.ID))
-        GlobalScope.launch {
+        viewLifecycleOwner.lifecycleScope.launch {
             habitInfo = viewModel.getHabit(id)
         }
     }
@@ -203,13 +212,13 @@ class HabitEditingFragment : Fragment() {
 
     private fun onSaveClick(view: View) {
         saveUserInput()
-        GlobalScope.launch {
-            viewModel.changeHabit(habitInfo)
-        }
-        navController.navigate(R.id.action_habitEditingFragment_to_mainFragment)
+        viewModel.changeHabit(habitInfo)
+        requireActivity().findNavController(R.id.nav_host_fragment)
+            .navigate(R.id.action_habitEditingFragment_to_mainFragment)
     }
 
     private fun onCancelClick(view: View) {
-        navController.navigate(R.id.action_habitEditingFragment_to_mainFragment)
+        requireActivity().findNavController(R.id.nav_host_fragment)
+            .navigate(R.id.action_habitEditingFragment_to_mainFragment)
     }
 }

@@ -1,23 +1,30 @@
 package ru.glazunov.habitstracker.viewmodels
 
-import android.content.Context
+import android.os.Bundle
 import android.util.Log
+import androidx.lifecycle.AbstractSavedStateViewModelFactory
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import androidx.savedstate.SavedStateRegistryOwner
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import ru.glazunov.habitstracker.models.HabitInfo
 import ru.glazunov.habitstracker.models.HabitListViewModelState
 import ru.glazunov.habitstracker.models.HabitType
 import ru.glazunov.habitstracker.models.Ordering
-import ru.glazunov.habitstracker.repository.HabitsDatabase
+import ru.glazunov.habitstracker.repository.IHabitsRepository
 
 class HabitsListViewModel(
-    context: Context,
+    model: IHabitsRepository,
     lifecycleOwner: LifecycleOwner
 ): ViewModel() {
     private val state = HabitListViewModelState()
-    private val model = HabitsDatabase.getInstance(context).habitsDao()
+//    private val model = HabitsDatabase.getInstance(context).habitsDao()
 
     private var baseHabits: List<HabitInfo> = arrayListOf()
     private val processedHabits: MutableLiveData<List<HabitInfo>> = MutableLiveData()
@@ -72,5 +79,28 @@ class HabitsListViewModel(
         selectByTypeInternal(state.habitType)
         selectByNamePrefixInternal(state.searchPrefix)
         orderByNameInternal(state.ordering)
+    }
+
+    companion object {
+        private var instance: HabitsListViewModel? = null
+
+        @Suppress("UNCHECKED_CAST")
+        fun provideFactory(
+            repository: IHabitsRepository,
+            lifecycleOwner: LifecycleOwner,
+            owner: SavedStateRegistryOwner,
+            defaultArgs: Bundle? = null,
+        ): AbstractSavedStateViewModelFactory =
+            object : AbstractSavedStateViewModelFactory(owner, defaultArgs) {
+                override fun <T : ViewModel> create(
+                    key: String,
+                    modelClass: Class<T>,
+                    handle: SavedStateHandle
+                ): T {
+                    if (instance == null)
+                        instance = HabitsListViewModel(repository, lifecycleOwner)
+                    return instance!! as T
+                }
+            }
     }
 }

@@ -9,15 +9,25 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import kotlinx.android.synthetic.main.fragment_bottom_sheet.*
 import ru.glazunov.habitstracker.R
 import ru.glazunov.habitstracker.models.Ordering
+import ru.glazunov.habitstracker.repository.HabitsDatabase
+import ru.glazunov.habitstracker.viewmodels.HabitEditingViewModel
 import ru.glazunov.habitstracker.viewmodels.HabitsListViewModel
 
 class BottomSheetFragment : BottomSheetDialogFragment() {
-    private val viewModel: HabitsListViewModel by activityViewModels()
+//    private val viewModel: HabitsListViewModel by activityViewModels()
+    private val viewModel: HabitsListViewModel by viewModels {
+    HabitsListViewModel.provideFactory(
+        HabitsDatabase.getInstance(requireContext()).habitsDao(),
+        requireActivity(),
+        this
+    )
+}
 
     override fun onCreateView(
         inflater: LayoutInflater,

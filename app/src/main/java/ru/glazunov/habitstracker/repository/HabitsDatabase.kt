@@ -12,18 +12,13 @@ abstract class HabitsDatabase : RoomDatabase() {
     companion object {
         private var instance: HabitsDatabase? = null
         fun getInstance(context: Context): HabitsDatabase {
-            if (instance != null)
-                return instance!!
-
-            runBlocking {
-                if (instance != null)
-                    return@runBlocking instance!!
-
+            if (instance == null)
                 instance = Room.databaseBuilder(
                     context,
-                    HabitsDatabase::class.java, "HabitsDatabase"
+                    HabitsDatabase::class.java,
+                    "HabitsDatabase"
                 ).build()
-            }
+
             return instance!!
         }
     }

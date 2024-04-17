@@ -2,37 +2,17 @@ package ru.glazunov.habitstracker
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
-import androidx.room.Room
 import kotlinx.android.synthetic.main.activity_main.*
 import ru.glazunov.habitstracker.models.Constants
-import ru.glazunov.habitstracker.repository.HabitsDatabase
-import ru.glazunov.habitstracker.viewmodels.HabitEditingViewModel
-import ru.glazunov.habitstracker.viewmodels.HabitsListViewModel
 
 
 class MainActivity : AppCompatActivity() {
-    private lateinit var habitsListViewModel: HabitsListViewModel
-    private lateinit var habitEditingViewModel: HabitEditingViewModel
     private lateinit var navController: NavController
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        habitsListViewModel = ViewModelProvider(this, object : ViewModelProvider.Factory {
-            override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                return HabitsListViewModel(applicationContext, this@MainActivity) as T
-            }
-        }).get(HabitsListViewModel::class.java)
-
-        habitEditingViewModel = ViewModelProvider(this, object : ViewModelProvider.Factory {
-            override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                return HabitEditingViewModel(applicationContext) as T
-            }
-        }).get(HabitEditingViewModel::class.java)
 
         setContentView(R.layout.activity_main)
         navController = Navigation.findNavController(this, R.id.nav_host_fragment)
