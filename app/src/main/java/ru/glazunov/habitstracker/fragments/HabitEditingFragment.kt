@@ -105,6 +105,7 @@ class HabitEditingFragment : Fragment() {
         hsvColorValue.text = this.resources.getString(R.string.hsv_color, hsv[0], hsv[1], hsv[2])
     }
 
+    @Suppress("SameParameterValue")
     private fun getGradientColors(hueStep: Float, saturation: Float, value: Float): IntArray {
         var currentHue = 0.0F
         val result = ArrayList<Int>()
@@ -204,6 +205,7 @@ class HabitEditingFragment : Fragment() {
         }
     }
 
+    @Suppress("UNUSED_PARAMETER")
     private fun onSaveClick(view: View) {
         saveUserInput()
         viewModel.changeHabit(habitInfo)
@@ -211,6 +213,7 @@ class HabitEditingFragment : Fragment() {
             .navigate(R.id.action_habitEditingFragment_to_mainFragment)
     }
 
+    @Suppress("UNUSED_PARAMETER")
     private fun onCancelClick(view: View) {
         requireActivity().findNavController(R.id.nav_host_fragment)
             .navigate(R.id.action_habitEditingFragment_to_mainFragment)
