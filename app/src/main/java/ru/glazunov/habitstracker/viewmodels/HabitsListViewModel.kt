@@ -9,29 +9,29 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.savedstate.SavedStateRegistryOwner
-import ru.glazunov.habitstracker.models.HabitInfo
+import ru.glazunov.habitstracker.models.Habit
 import ru.glazunov.habitstracker.models.HabitListViewModelState
 import ru.glazunov.habitstracker.models.HabitType
 import ru.glazunov.habitstracker.models.Ordering
-import ru.glazunov.habitstracker.repository.IHabitsRepository
+import ru.glazunov.habitstracker.repository.HabitDao
 
 class HabitsListViewModel(
-    model: IHabitsRepository,
+    dao: HabitDao,
     lifecycleOwner: LifecycleOwner
 ): ViewModel() {
     private val state = HabitListViewModelState()
-    private val positiveProcessedHabits: MutableLiveData<List<HabitInfo>> = MutableLiveData()
-    private val negativeProcessedHabits: MutableLiveData<List<HabitInfo>> = MutableLiveData()
-    private var baseHabits: List<HabitInfo> = arrayListOf()
+    private val positiveProcessedHabits: MutableLiveData<List<Habit>> = MutableLiveData()
+    private val negativeProcessedHabits: MutableLiveData<List<Habit>> = MutableLiveData()
+    private var baseHabits: List<Habit> = arrayListOf()
 
     init {
-        model.getHabits().observe(lifecycleOwner) { habits ->
+        dao.getAllHabits().observe(lifecycleOwner) { habits ->
             baseHabits = habits
             selectByState()
         }
     }
 
-    fun habits(type: HabitType): LiveData<List<HabitInfo>> =
+    fun habits(type: HabitType): LiveData<List<Habit>> =
         when (type) {
             HabitType.NEGATIVE -> negativeProcessedHabits
             HabitType.POSITIVE -> positiveProcessedHabits
@@ -47,7 +47,7 @@ class HabitsListViewModel(
         selectByState()
     }
 
-    private fun selectByNamePrefixInternal(name: String, data: MutableLiveData<List<HabitInfo>>) {
+    private fun selectByNamePrefixInternal(name: String, data: MutableLiveData<List<Habit>>) {
         if (name.isEmpty() || name.isBlank())
             return
 
@@ -56,7 +56,8 @@ class HabitsListViewModel(
         Log.d(this::class.java.canonicalName, "Was selected by name $name")
     }
 
-    private fun orderByNameInternal(ordering: Ordering, data: MutableLiveData<List<HabitInfo>>) {
+    // TODO Лучше обращаться к БД, чем сортировать у себя
+    private fun orderByNameInternal(ordering: Ordering, data: MutableLiveData<List<Habit>>) {
         data.value = when(ordering){
             Ordering.Ascending -> data.value?.sortedBy { it.name }?.let { ArrayList(it) }
             Ordering.Descending -> data.value?.sortedByDescending { it.name }?.let { ArrayList(it) }
@@ -79,7 +80,7 @@ class HabitsListViewModel(
 
         @Suppress("UNCHECKED_CAST")
         fun provideFactory(
-            repository: IHabitsRepository,
+            dao: HabitDao,
             lifecycleOwner: LifecycleOwner,
             owner: SavedStateRegistryOwner,
             defaultArgs: Bundle? = null,
@@ -91,7 +92,7 @@ class HabitsListViewModel(
                     handle: SavedStateHandle
                 ): T {
                     if (instance == null)
-                        instance = HabitsListViewModel(repository, lifecycleOwner)
+                        instance = HabitsListViewModel(dao, lifecycleOwner)
                     return instance!! as T
                 }
             }

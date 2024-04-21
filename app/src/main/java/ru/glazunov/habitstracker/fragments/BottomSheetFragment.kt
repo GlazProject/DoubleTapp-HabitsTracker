@@ -17,10 +17,9 @@ import ru.glazunov.habitstracker.repository.HabitsDatabase
 import ru.glazunov.habitstracker.viewmodels.HabitsListViewModel
 
 class BottomSheetFragment : BottomSheetDialogFragment() {
-//    private val viewModel: HabitsListViewModel by activityViewModels()
     private val viewModel: HabitsListViewModel by viewModels {
     HabitsListViewModel.provideFactory(
-        HabitsDatabase.getInstance(requireContext()).habitsDao(),
+        HabitsDatabase.getInstance(requireContext()).habitDao(),
         requireActivity(),
         this
     )
@@ -38,13 +37,10 @@ class BottomSheetFragment : BottomSheetDialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        Log.d(this::class.java.canonicalName, "Start bottom sheet registration")
-
         BottomSheetBehavior.from(bottom_sheet).state = BottomSheetBehavior.STATE_EXPANDED
         searchEdit.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
                 viewModel.selectByName(s.toString())
-                Log.d(this::class.java.canonicalName, "Write text $s")
             }
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}

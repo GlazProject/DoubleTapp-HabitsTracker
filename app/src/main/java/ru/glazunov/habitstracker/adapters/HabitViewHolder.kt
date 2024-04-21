@@ -7,7 +7,7 @@ import androidx.navigation.NavController
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.view_habit_info.view.*
 import ru.glazunov.habitstracker.models.Constants
-import ru.glazunov.habitstracker.models.HabitInfo
+import ru.glazunov.habitstracker.models.Habit
 import ru.glazunov.habitstracker.R
 import ru.glazunov.habitstracker.models.HabitType
 
@@ -16,24 +16,24 @@ class HabitViewHolder(
     private val context: Context,
     private val navController: NavController,
 ) : RecyclerView.ViewHolder(view), View.OnClickListener {
-    var habitInfo = HabitInfo()
+    var habit = Habit()
 
     init {
         view.setOnClickListener(this)
     }
 
-    fun bind(habitInfo: HabitInfo) {
-        view.name.text = habitInfo.name
-        view.description.text = habitInfo.description
-        view.type.text = getHabitTypeString(habitInfo.type)
-        view.priority.text = habitInfo.priority
-        view.setBackgroundColor(habitInfo.color)
-        view.period.text = context.getString(R.string.repeatInDays, habitInfo.repeatsCount, habitInfo.daysPeriod)
+    fun bind(habit: Habit) {
+        view.name.text = habit.name
+        view.description.text = habit.description
+        view.type.text = getHabitTypeString(habit.type)
+        view.priority.text = habit.priority
+        view.setBackgroundColor(habit.color)
+        view.period.text = context.getString(R.string.repeatInDays, habit.repeatsCount, habit.daysPeriod)
     }
 
     override fun onClick(v: View?) {
         val bundle = Bundle()
-        bundle.putString(Constants.FieldNames.ID, habitInfo.id.toString())
+        bundle.putString(Constants.FieldNames.ID, habit.id.toString())
         navController.navigate(R.id.action_mainFragment_to_habitEditingFragment, bundle)
     }
 

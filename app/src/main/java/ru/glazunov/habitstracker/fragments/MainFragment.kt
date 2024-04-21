@@ -21,10 +21,11 @@ import ru.glazunov.habitstracker.repository.HabitsDatabase
 import ru.glazunov.habitstracker.viewmodels.HabitsListViewModel
 
 class MainFragment: Fragment() {
-    private lateinit var habitsTypesList: ArrayList<String>
+    private lateinit var habitTypesList: ArrayList<String>
+
     private val viewModel: HabitsListViewModel by viewModels {
     HabitsListViewModel.provideFactory(
-        HabitsDatabase.getInstance(requireActivity().applicationContext).habitsDao(),
+        HabitsDatabase.getInstance(requireActivity().applicationContext).habitDao(),
         requireActivity(),
         this
     )
@@ -35,7 +36,7 @@ class MainFragment: Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        habitsTypesList = arrayListOf(getString(R.string.positive_habits), getString(R.string.negative_habits))
+        habitTypesList = arrayListOf(getString(R.string.positive_habits), getString(R.string.negative_habits))
         return inflater.inflate(R.layout.fragment_main, container, false)
     }
 
@@ -43,7 +44,6 @@ class MainFragment: Fragment() {
         super.onViewCreated(view, savedInstanceState)
         fab.setOnClickListener(this::onFabClick)
 
-        // Если это переносить в BottomSheetFragment, то перестаёт работать :(((
         BottomSheetBehavior.from(bottom_sheet).state = BottomSheetBehavior.STATE_EXPANDED
         searchEdit.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
@@ -56,11 +56,9 @@ class MainFragment: Fragment() {
         orderNameAscendingButton.setOnClickListener { viewModel.orderByName(Ordering.Ascending) }
         orderNameDescendingButton.setOnClickListener { viewModel.orderByName(Ordering.Descending) }
 
-        val viewPager = mainPager
-        viewPager.adapter = HabitsViewPagerAdapter(viewModel, this)
-        val tabLayout = tabs
-        TabLayoutMediator(tabLayout, viewPager) { tab, position ->
-            tab.text = habitsTypesList[position]
+        mainPager.adapter = HabitsViewPagerAdapter(viewModel, this)
+        TabLayoutMediator(tabs, mainPager) { tab, position ->
+            tab.text = habitTypesList[position]
         }.attach()
     }
 

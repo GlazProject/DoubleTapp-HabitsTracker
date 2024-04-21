@@ -7,18 +7,17 @@
       </entry>
       <entry key="app">
         <State>
-          <targetSelectedWithDropDown>
+          <targetsSelectedWithDialog>
             <Target>
               <type value="QUICK_BOOT_TARGET" />
               <deviceKey>
                 <Key>
                   <type value="VIRTUAL_DEVICE_PATH" />
-                  <value value="C:\Users\Никита\.android\avd\Pixel_5_API_29.avd" />
+                  <value value="C:\Users\Никита\.android\avd\Pixel_8_API_30.avd" />
                 </Key>
               </deviceKey>
             </Target>
-          </targetSelectedWithDropDown>
-          <timeTargetWasSelectedWithDropDown value="2024-04-17T15:11:17.052728700Z" />
+          </targetsSelectedWithDialog>
         </State>
       </entry>
     </value>

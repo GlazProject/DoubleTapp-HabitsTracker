@@ -5,13 +5,13 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.navigation.NavController
 import androidx.recyclerview.widget.RecyclerView
-import ru.glazunov.habitstracker.models.HabitInfo
+import ru.glazunov.habitstracker.models.Habit
 import ru.glazunov.habitstracker.R
 
 class HabitsRecyclerViewAdapter(
     private val navController: NavController
 ) : RecyclerView.Adapter<HabitViewHolder>() {
-    private var habitsInfos: List<HabitInfo> = arrayListOf()
+    private var habitsInfos: List<Habit> = arrayListOf()
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -29,13 +29,13 @@ class HabitsRecyclerViewAdapter(
 
     override fun onBindViewHolder(holder: HabitViewHolder, position: Int) {
         holder.bind(habitsInfos[position])
-        holder.habitInfo = habitsInfos[position]
+        holder.habit = habitsInfos[position]
     }
 
     override fun getItemCount() = habitsInfos.size
 
     @SuppressLint("NotifyDataSetChanged")
-    fun setHabitInfos(habits: List<HabitInfo>) {
+    fun setHabitInfos(habits: List<Habit>) {
         habitsInfos = habits
         notifyDataSetChanged()
     }

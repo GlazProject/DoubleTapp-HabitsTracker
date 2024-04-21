@@ -17,13 +17,11 @@ import androidx.core.view.children
 import androidx.core.view.doOnLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import kotlinx.android.synthetic.main.fragment_habit_editing.*
-import kotlinx.coroutines.launch
 import ru.glazunov.habitstracker.*
 import ru.glazunov.habitstracker.models.Constants
-import ru.glazunov.habitstracker.models.HabitInfo
+import ru.glazunov.habitstracker.models.Habit
 import ru.glazunov.habitstracker.models.HabitType
 import ru.glazunov.habitstracker.repository.HabitsDatabase
 import ru.glazunov.habitstracker.viewmodels.HabitEditingViewModel
@@ -32,10 +30,10 @@ import kotlin.math.round
 
 class HabitEditingFragment : Fragment() {
     private val colorPickerSquaresNumber = 16
-    private var habitInfo = HabitInfo()
+    private var habit = Habit()
     private val viewModel: HabitEditingViewModel by viewModels {
         HabitEditingViewModel.provideFactory(
-            HabitsDatabase.getInstance(requireContext()).habitsDao(),
+            HabitsDatabase.getInstance(requireContext()).habitDao(),
             this
         )
     }
@@ -54,27 +52,21 @@ class HabitEditingFragment : Fragment() {
             arguments?.let { loadHabit(it) }
 
         setListeners()
-        chosenColorDisplay.setBackgroundColor(habitInfo.color)
         createColorButtons()
         colorPickerLayout.doOnLayout(this::onButtonsLayout)
-        updateViews(habitInfo)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         saveUserInput()
-        outState.putString(Constants.FieldNames.ID, habitInfo.id.toString())
-    }
-
-    override fun onStart() {
-        super.onStart()
-        updateViews(habitInfo)
+        outState.putString(Constants.FieldNames.ID, habit.id.toString())
     }
 
     private fun loadHabit(bundle: Bundle) {
         val id = UUID.fromString(bundle.getString(Constants.FieldNames.ID))
-        viewLifecycleOwner.lifecycleScope.launch {
-            habitInfo = viewModel.getHabit(id)
+        viewModel.getHabit(id).observe(viewLifecycleOwner){habit ->
+            this.habit = habit
+            updateViews(this.habit)
         }
     }
 
@@ -145,15 +137,15 @@ class HabitEditingFragment : Fragment() {
         cancelButton.setOnClickListener(this::onCancelClick)
     }
 
-    private fun updateViews(habitInfo: HabitInfo?) {
-        chosenColorDisplay.setBackgroundColor(habitInfo?.color ?: Color.WHITE)
-        chosenColorValue.text = (habitInfo?.color ?: Color.WHITE).toString()
-        habitName.setText(habitInfo?.name ?: "")
-        habitDescription.setText(habitInfo?.description ?: "")
-        habitType.check(getCheckedButtonId(habitType, getHabitTypeString(habitInfo?.type)))
-        habitPriority.setSelection(getSelectedItemPosition(habitPriority, habitInfo?.priority))
-        habitRepeatDays.setText(habitInfo?.daysPeriod.toString())
-        habitRepeatsCount.setText(habitInfo?.repeatsCount.toString())
+    private fun updateViews(habit: Habit?) {
+        chosenColorDisplay.setBackgroundColor(habit?.color ?: Color.WHITE)
+        chosenColorValue.text = (habit?.color ?: Color.WHITE).toString()
+        habitName.setText(habit?.name ?: "")
+        habitDescription.setText(habit?.description ?: "")
+        habitType.check(getCheckedButtonId(habitType, getHabitTypeString(habit?.type)))
+        habitPriority.setSelection(getSelectedItemPosition(habitPriority, habit?.priority))
+        habitRepeatDays.setText(habit?.daysPeriod.toString())
+        habitRepeatsCount.setText(habit?.repeatsCount.toString())
     }
 
     private fun getSelectedItemPosition(spinner: Spinner, text: String?): Int {
@@ -178,8 +170,8 @@ class HabitEditingFragment : Fragment() {
         if (habitName == null)
             return
 
-        habitInfo = HabitInfo(
-            id = habitInfo.id,
+        habit = Habit(
+            id = habit.id,
             name = habitName.text.toString(),
             description = habitDescription.text.toString(),
             type = getHabitType(),
@@ -208,7 +200,7 @@ class HabitEditingFragment : Fragment() {
     @Suppress("UNUSED_PARAMETER")
     private fun onSaveClick(view: View) {
         saveUserInput()
-        viewModel.changeHabit(habitInfo)
+        viewModel.changeHabit(habit)
         requireActivity().findNavController(R.id.nav_host_fragment)
             .navigate(R.id.action_habitEditingFragment_to_mainFragment)
     }
