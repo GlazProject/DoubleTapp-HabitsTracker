@@ -8,7 +8,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.savedstate.SavedStateRegistryOwner
 import kotlinx.coroutines.launch
 import ru.glazunov.habitstracker.models.Habit
-import ru.glazunov.habitstracker.repository.HabitDao
+import ru.glazunov.habitstracker.repository.local.HabitDao
 import java.util.*
 
 class HabitEditingViewModel(private val dao: HabitDao) : ViewModel() {

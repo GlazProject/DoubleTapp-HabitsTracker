@@ -12,7 +12,7 @@ import ru.glazunov.habitstracker.models.Habit
 import ru.glazunov.habitstracker.models.HabitListViewModelState
 import ru.glazunov.habitstracker.models.HabitType
 import ru.glazunov.habitstracker.models.Ordering
-import ru.glazunov.habitstracker.repository.HabitDao
+import ru.glazunov.habitstracker.repository.local.HabitDao
 
 class HabitsListViewModel(
     private val dao: HabitDao,

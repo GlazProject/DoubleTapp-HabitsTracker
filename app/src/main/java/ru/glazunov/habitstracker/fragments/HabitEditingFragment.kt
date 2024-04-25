@@ -23,7 +23,7 @@ import ru.glazunov.habitstracker.*
 import ru.glazunov.habitstracker.models.Constants
 import ru.glazunov.habitstracker.models.Habit
 import ru.glazunov.habitstracker.models.HabitType
-import ru.glazunov.habitstracker.repository.HabitsDatabase
+import ru.glazunov.habitstracker.repository.local.HabitsDatabase
 import ru.glazunov.habitstracker.viewmodels.HabitEditingViewModel
 import java.util.UUID
 import kotlin.math.round

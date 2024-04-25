@@ -13,7 +13,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import kotlinx.android.synthetic.main.fragment_bottom_sheet.*
 import ru.glazunov.habitstracker.R
 import ru.glazunov.habitstracker.models.Ordering
-import ru.glazunov.habitstracker.repository.HabitsDatabase
+import ru.glazunov.habitstracker.repository.local.HabitsDatabase
 import ru.glazunov.habitstracker.viewmodels.HabitsListViewModel
 
 class BottomSheetFragment : BottomSheetDialogFragment() {
@@ -30,7 +30,6 @@ class BottomSheetFragment : BottomSheetDialogFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        Log.d(this::class.java.canonicalName, "bottom sheet created")
         return inflater.inflate(R.layout.fragment_bottom_sheet, container, false)
     }
 

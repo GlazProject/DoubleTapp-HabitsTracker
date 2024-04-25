@@ -1,4 +1,4 @@
-package ru.glazunov.habitstracker.repository
+package ru.glazunov.habitstracker.repository.local
 
 import androidx.lifecycle.LiveData
 import androidx.room.*

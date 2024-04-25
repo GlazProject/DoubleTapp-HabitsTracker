@@ -17,7 +17,7 @@ import kotlinx.android.synthetic.main.fragment_main.*
 import ru.glazunov.habitstracker.R
 import ru.glazunov.habitstracker.adapters.HabitsViewPagerAdapter
 import ru.glazunov.habitstracker.models.Ordering
-import ru.glazunov.habitstracker.repository.HabitsDatabase
+import ru.glazunov.habitstracker.repository.local.HabitsDatabase
 import ru.glazunov.habitstracker.viewmodels.HabitsListViewModel
 
 class MainFragment: Fragment() {
