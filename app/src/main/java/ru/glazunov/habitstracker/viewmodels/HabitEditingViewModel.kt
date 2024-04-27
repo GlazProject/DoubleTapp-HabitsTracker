@@ -2,19 +2,30 @@ package ru.glazunov.habitstracker.viewmodels
 
 import android.os.Bundle
 import androidx.lifecycle.AbstractSavedStateViewModelFactory
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.savedstate.SavedStateRegistryOwner
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
 import ru.glazunov.habitstracker.models.Habit
 import ru.glazunov.habitstracker.repository.local.HabitDao
 import java.util.*
+import kotlin.coroutines.CoroutineContext
 
-class HabitEditingViewModel(private val dao: HabitDao) : ViewModel() {
-    fun getHabit(id: UUID) = dao.getHabit(id.toString())
+class HabitEditingViewModel(
+    private val owner: LifecycleOwner,
+    private val dao: HabitDao) : ViewModel() {
+    var habit: Habit = Habit()
 
-    fun changeHabit(habit: Habit) = viewModelScope.launch {
+    fun getHabit(id: UUID): LiveData<Habit> =
+        dao.getHabit(id.toString()).also { it.observe(owner){ habit -> this.habit = habit} }
+
+    fun saveHabit() = viewModelScope.launch(IO) {
         dao.putHabit(habit)
     }
 
@@ -34,7 +45,7 @@ class HabitEditingViewModel(private val dao: HabitDao) : ViewModel() {
                     handle: SavedStateHandle
                 ): T {
                     if (instance == null)
-                        instance = HabitEditingViewModel(dao)
+                        instance = HabitEditingViewModel(owner, dao)
                     return instance!! as T
                 }
             }

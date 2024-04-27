@@ -103,7 +103,7 @@
                     android:layout_width="wrap_content"
                     android:ems="3"
                     android:layout_height="wrap_content"
-                    android:inputType="text" />
+                    android:inputType="number" />
             </LinearLayout>
 
             <LinearLayout
@@ -122,7 +122,7 @@
                     android:layout_width="wrap_content"
                     android:ems="3"
                     android:layout_height="wrap_content"
-                    android:inputType="text" />
+                    android:inputType="number" />
             </LinearLayout>
 
             <LinearLayout
@@ -166,12 +166,6 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:clickable="false" />
-
-                    <TextView
-                        android:id="@+id/chosenColorValue"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:visibility="gone" />
                 </LinearLayout>
 
                 <HorizontalScrollView

@@ -33,6 +33,8 @@ class BottomSheetFragment : BottomSheetDialogFragment() {
         return inflater.inflate(R.layout.fragment_bottom_sheet, container, false)
     }
 
+    // TODO удалённые датасурсы, а класс репозитория только один.
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 

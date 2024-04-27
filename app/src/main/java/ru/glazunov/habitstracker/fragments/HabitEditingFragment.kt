@@ -15,6 +15,7 @@ import androidx.core.graphics.green
 import androidx.core.graphics.red
 import androidx.core.view.children
 import androidx.core.view.doOnLayout
+import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
@@ -30,7 +31,6 @@ import kotlin.math.round
 
 class HabitEditingFragment : Fragment() {
     private val colorPickerSquaresNumber = 16
-    private var habit = Habit()
     private val viewModel: HabitEditingViewModel by viewModels {
         HabitEditingViewModel.provideFactory(
             HabitsDatabase.getInstance(requireContext()).habitDao(),
@@ -46,10 +46,14 @@ class HabitEditingFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        if (savedInstanceState == null)
+            arguments?.let { loadHabit(it) }
+    }
+
+    override fun onViewStateRestored(savedInstanceState: Bundle?) {
+        super.onViewStateRestored(savedInstanceState)
         if (savedInstanceState != null)
             loadHabit(savedInstanceState)
-        else
-            arguments?.let { loadHabit(it) }
 
         setListeners()
         createColorButtons()
@@ -58,15 +62,13 @@ class HabitEditingFragment : Fragment() {
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        saveUserInput()
-        outState.putString(Constants.FieldNames.ID, habit.id.toString())
+        outState.putString(Constants.FieldNames.ID, viewModel.habit.id.toString())
     }
 
     private fun loadHabit(bundle: Bundle) {
         val id = UUID.fromString(bundle.getString(Constants.FieldNames.ID))
-        viewModel.getHabit(id).observe(viewLifecycleOwner){habit ->
-            this.habit = habit
-            updateViews(this.habit)
+        viewModel.getHabit(id).observe(viewLifecycleOwner){ habit ->
+            updateViews(habit)
         }
     }
 
@@ -89,7 +91,7 @@ class HabitEditingFragment : Fragment() {
     private fun onColorSquareClick(view: View) {
         val color = (view.background as ColorDrawable).color
         chosenColorDisplay.setBackgroundColor(color)
-        chosenColorValue.text = color.toString()
+        viewModel.habit.color = color
         val hsv = FloatArray(3)
         Color.colorToHSV(color, hsv)
         val rgb = hexToRgb(color)
@@ -135,11 +137,31 @@ class HabitEditingFragment : Fragment() {
     private fun setListeners() {
         saveButton.setOnClickListener(this::onSaveClick)
         cancelButton.setOnClickListener(this::onCancelClick)
+
+        habitName.addTextChangedListener { text ->  viewModel.habit.name = text.toString()}
+        habitDescription.addTextChangedListener { text ->  viewModel.habit.description = text.toString()}
+        habitDescription.addTextChangedListener { text ->  viewModel.habit.description = text.toString()}
+        habitRepeatsCount.addTextChangedListener{ text -> viewModel.habit.repeatsCount = text.toString().toIntOrNull() ?: 0 }
+        habitRepeatDays.addTextChangedListener{ text -> viewModel.habit.daysPeriod = text.toString().toIntOrNull() ?: 0 }
+
+        habitType.setOnCheckedChangeListener { group, id ->
+            viewModel.habit.type = when (group.findViewById<RadioButton>(id).text.toString()) {
+                getString(R.string.positive_habit) -> HabitType.POSITIVE
+                getString(R.string.negative_habit) -> HabitType.NEGATIVE
+                else -> throw IndexOutOfBoundsException()
+            }
+        }
+
+        habitPriority.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
+            override fun onNothingSelected(parent: AdapterView<*>?){}
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                viewModel.habit.priority = habitPriority.selectedItem.toString()
+            }
+        }
     }
 
     private fun updateViews(habit: Habit?) {
         chosenColorDisplay.setBackgroundColor(habit?.color ?: Color.WHITE)
-        chosenColorValue.text = (habit?.color ?: Color.WHITE).toString()
         habitName.setText(habit?.name ?: "")
         habitDescription.setText(habit?.description ?: "")
         habitType.check(getCheckedButtonId(habitType, getHabitTypeString(habit?.type)))
@@ -166,29 +188,6 @@ class HabitEditingFragment : Fragment() {
         return radioGroup.children.first().id
     }
 
-    private fun saveUserInput() {
-        if (habitName == null)
-            return
-
-        habit = Habit(
-            id = habit.id,
-            name = habitName.text.toString(),
-            description = habitDescription.text.toString(),
-            type = getHabitType(),
-            repeatsCount = habitRepeatsCount.text.toString().toIntOrNull() ?: 0,
-            daysPeriod = habitRepeatDays.text.toString().toIntOrNull() ?: 0,
-            priority = habitPriority.selectedItem.toString(),
-            color =  chosenColorValue.text.toString().toIntOrNull() ?: Color.WHITE
-        )
-    }
-
-    private fun getHabitType(): HabitType =
-        when(habitType.findViewById<RadioButton>(habitType.checkedRadioButtonId).text.toString()){
-            getString(R.string.positive_habit) -> HabitType.POSITIVE
-            getString(R.string.negative_habit) -> HabitType.NEGATIVE
-            else -> throw IndexOutOfBoundsException()
-        }
-
     private fun getHabitTypeString(type: HabitType?): String{
         return when (type){
             HabitType.POSITIVE -> getString(R.string.positive_habit)
@@ -199,8 +198,7 @@ class HabitEditingFragment : Fragment() {
 
     @Suppress("UNUSED_PARAMETER")
     private fun onSaveClick(view: View) {
-        saveUserInput()
-        viewModel.changeHabit(habit)
+        viewModel.saveHabit()
         requireActivity().findNavController(R.id.nav_host_fragment)
             .navigate(R.id.action_habitEditingFragment_to_mainFragment)
     }
