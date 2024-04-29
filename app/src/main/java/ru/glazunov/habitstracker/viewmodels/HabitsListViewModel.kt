@@ -8,14 +8,14 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.savedstate.SavedStateRegistryOwner
+import ru.glazunov.habitstracker.data.IHabitsRepository
 import ru.glazunov.habitstracker.models.Habit
 import ru.glazunov.habitstracker.models.HabitListViewModelState
 import ru.glazunov.habitstracker.models.HabitType
 import ru.glazunov.habitstracker.models.Ordering
-import ru.glazunov.habitstracker.repository.local.HabitDao
 
 class HabitsListViewModel(
-    private val dao: HabitDao,
+    private val repo: IHabitsRepository,
     private val lifecycleOwner: LifecycleOwner
 ): ViewModel() {
     private val state = HabitListViewModelState()
@@ -43,11 +43,11 @@ class HabitsListViewModel(
     }
 
     private fun selectByState(){
-        dao.getHabitsByTypeAndPrefix(HabitType.POSITIVE, state.searchPrefix, state.ordering)
+        repo.getHabits(HabitType.POSITIVE, state.searchPrefix, state.ordering)
             .observe(lifecycleOwner) { habits ->
             positiveHabits.value = habits
         }
-        dao.getHabitsByTypeAndPrefix(HabitType.NEGATIVE, state.searchPrefix, state.ordering)
+        repo.getHabits(HabitType.NEGATIVE, state.searchPrefix, state.ordering)
             .observe(lifecycleOwner) { habits ->
             negativeHabits.value = habits
         }
@@ -58,7 +58,7 @@ class HabitsListViewModel(
 
         @Suppress("UNCHECKED_CAST")
         fun provideFactory(
-            dao: HabitDao,
+            repo: IHabitsRepository,
             lifecycleOwner: LifecycleOwner,
             owner: SavedStateRegistryOwner,
             defaultArgs: Bundle? = null,
@@ -70,7 +70,7 @@ class HabitsListViewModel(
                     handle: SavedStateHandle
                 ): T {
                     if (instance == null)
-                        instance = HabitsListViewModel(dao, lifecycleOwner)
+                        instance = HabitsListViewModel(repo, lifecycleOwner)
                     return instance!! as T
                 }
             }

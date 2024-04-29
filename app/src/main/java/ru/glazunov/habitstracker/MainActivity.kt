@@ -2,9 +2,13 @@ package ru.glazunov.habitstracker
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import ru.glazunov.habitstracker.data.HabitsRepository
 import ru.glazunov.habitstracker.models.Constants
 
 
@@ -31,6 +35,13 @@ class MainActivity : AppCompatActivity() {
 
                 else -> false
             }
+        }
+
+        refreshLayout.setOnRefreshListener {
+            lifecycleScope.launch(Dispatchers.IO) {
+                HabitsRepository.getInstance(applicationContext, this@MainActivity).syncHabits()
+            }
+            refreshLayout.isRefreshing = false
         }
 
         if (savedInstanceState != null) {

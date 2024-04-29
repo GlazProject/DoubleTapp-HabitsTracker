@@ -3,7 +3,6 @@ package ru.glazunov.habitstracker.fragments
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,14 +11,14 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import kotlinx.android.synthetic.main.fragment_bottom_sheet.*
 import ru.glazunov.habitstracker.R
+import ru.glazunov.habitstracker.data.HabitsRepository
 import ru.glazunov.habitstracker.models.Ordering
-import ru.glazunov.habitstracker.repository.local.HabitsDatabase
 import ru.glazunov.habitstracker.viewmodels.HabitsListViewModel
 
 class BottomSheetFragment : BottomSheetDialogFragment() {
     private val viewModel: HabitsListViewModel by viewModels {
     HabitsListViewModel.provideFactory(
-        HabitsDatabase.getInstance(requireContext()).habitDao(),
+        HabitsRepository.getInstance(requireContext(), requireActivity()),
         requireActivity(),
         this
     )
@@ -32,8 +31,6 @@ class BottomSheetFragment : BottomSheetDialogFragment() {
     ): View? {
         return inflater.inflate(R.layout.fragment_bottom_sheet, container, false)
     }
-
-    // TODO удалённые датасурсы, а класс репозитория только один.
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

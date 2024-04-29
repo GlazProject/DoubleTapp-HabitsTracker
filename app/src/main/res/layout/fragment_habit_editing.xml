@@ -24,6 +24,14 @@
                 android:hint="@string/habit_name"
                 android:inputType="text" />
 
+            <TextView
+                android:id="@+id/nameWarning"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/red"
+                android:text="@string/name_warning"
+                android:visibility="invisible"/>
+
             <EditText
                 android:id="@+id/habitDescription"
                 android:layout_width="match_parent"
@@ -35,6 +43,14 @@
                 android:overScrollMode="always"
                 android:scrollbarStyle="insideInset"
                 android:scrollbars="vertical" />
+
+            <TextView
+                android:id="@+id/descriptionWarning"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/red"
+                android:text="@string/description_warning"
+                android:visibility="invisible"/>
 
             <LinearLayout
                 android:layout_marginTop="10dp"

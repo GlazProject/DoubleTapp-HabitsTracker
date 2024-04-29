@@ -26,6 +26,8 @@
     <string name="application_info_title">Информация о приложении</string>
     <string name="application_info_description">Приложение - трекер привычек</string>
 
+    <string name="unable_to_sync_habit">Невозможно синхронизировать привычки</string>
+
     <string-array name="habit_priorities">
         <item>Высокий</item>
         <item>Средний</item>
@@ -38,13 +40,12 @@
     <string name="nav_header_subtitle">android.studio@android.com</string>
     <string name="nav_header_desc">Navigation header</string>
 
-    <string name="menu_home">Home</string>
-    <string name="menu_gallery">Gallery</string>
-    <string name="menu_slideshow">Slideshow</string>
     <string name="app_info_menu_title">О приложении</string>
     <string name="search">Поиск</string>
     <string name="filter_by_name">Отсортировать по названию</string>
     <string name="priprityOrderingName">Отсортировать по приоритету</string>
     <string name="descending">А-Я</string>
     <string name="ascending">Я-А</string>
+    <string name="description_warning">Описание не должно быть пустым</string>
+    <string name="name_warning">Название не должно быть пустым</string>
 </resources>

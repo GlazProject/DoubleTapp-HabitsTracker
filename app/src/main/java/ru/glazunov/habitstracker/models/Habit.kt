@@ -4,7 +4,7 @@ import android.graphics.Color
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.TypeConverters
-import ru.glazunov.habitstracker.repository.local.UUIDConverter
+import ru.glazunov.habitstracker.data.local.UUIDConverter
 import java.util.*
 
 @Entity(tableName = "habits")
@@ -13,9 +13,11 @@ data class Habit(
     var name: String = "",
     var description: String = "",
     var type: HabitType = HabitType.POSITIVE,
-    var priority: String = "",
+    var priority: HabitPriority = HabitPriority.LOW,
     var repeatsCount: Int = 0,
     var daysPeriod: Int = 0,
     var color: Int = Color.WHITE,
+    var isModified: Boolean = true,
+    var isLocal: Boolean = true,
     @PrimaryKey(autoGenerate = false) var id: UUID = UUID.randomUUID()
 )

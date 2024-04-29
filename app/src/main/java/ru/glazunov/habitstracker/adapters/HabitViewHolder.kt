@@ -9,6 +9,7 @@ import kotlinx.android.synthetic.main.view_habit_info.view.*
 import ru.glazunov.habitstracker.models.Constants
 import ru.glazunov.habitstracker.models.Habit
 import ru.glazunov.habitstracker.R
+import ru.glazunov.habitstracker.models.HabitPriority
 import ru.glazunov.habitstracker.models.HabitType
 
 class HabitViewHolder(
@@ -26,7 +27,7 @@ class HabitViewHolder(
         view.name.text = habit.name
         view.description.text = habit.description
         view.type.text = getHabitTypeString(habit.type)
-        view.priority.text = habit.priority
+        view.priority.text = getHabitPriorityString(habit.priority)
         view.setBackgroundColor(habit.color)
         view.period.text = context.getString(R.string.repeatInDays, habit.repeatsCount, habit.daysPeriod)
     }
@@ -44,4 +45,7 @@ class HabitViewHolder(
             else -> context.getString(R.string.positive_habit)
         }
     }
+
+    private fun getHabitPriorityString(priority: HabitPriority?): String =
+        context.resources.getStringArray(R.array.habit_priorities)[priority?.value ?: 0]
 }

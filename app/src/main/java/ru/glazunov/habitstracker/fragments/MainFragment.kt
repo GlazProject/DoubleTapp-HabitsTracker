@@ -16,8 +16,8 @@ import kotlinx.android.synthetic.main.fragment_bottom_sheet.*
 import kotlinx.android.synthetic.main.fragment_main.*
 import ru.glazunov.habitstracker.R
 import ru.glazunov.habitstracker.adapters.HabitsViewPagerAdapter
+import ru.glazunov.habitstracker.data.HabitsRepository
 import ru.glazunov.habitstracker.models.Ordering
-import ru.glazunov.habitstracker.repository.local.HabitsDatabase
 import ru.glazunov.habitstracker.viewmodels.HabitsListViewModel
 
 class MainFragment: Fragment() {
@@ -25,7 +25,7 @@ class MainFragment: Fragment() {
 
     private val viewModel: HabitsListViewModel by viewModels {
     HabitsListViewModel.provideFactory(
-        HabitsDatabase.getInstance(requireActivity().applicationContext).habitDao(),
+        HabitsRepository.getInstance(requireContext(), requireActivity()),
         requireActivity(),
         this
     )

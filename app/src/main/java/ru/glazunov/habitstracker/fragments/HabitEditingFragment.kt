@@ -21,10 +21,11 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
 import kotlinx.android.synthetic.main.fragment_habit_editing.*
 import ru.glazunov.habitstracker.*
+import ru.glazunov.habitstracker.data.HabitsRepository
 import ru.glazunov.habitstracker.models.Constants
 import ru.glazunov.habitstracker.models.Habit
 import ru.glazunov.habitstracker.models.HabitType
-import ru.glazunov.habitstracker.repository.local.HabitsDatabase
+import ru.glazunov.habitstracker.models.HabitPriority
 import ru.glazunov.habitstracker.viewmodels.HabitEditingViewModel
 import java.util.UUID
 import kotlin.math.round
@@ -33,7 +34,7 @@ class HabitEditingFragment : Fragment() {
     private val colorPickerSquaresNumber = 16
     private val viewModel: HabitEditingViewModel by viewModels {
         HabitEditingViewModel.provideFactory(
-            HabitsDatabase.getInstance(requireContext()).habitDao(),
+            HabitsRepository.getInstance(requireContext(), requireActivity()),
             this
         )
     }
@@ -138,9 +139,15 @@ class HabitEditingFragment : Fragment() {
         saveButton.setOnClickListener(this::onSaveClick)
         cancelButton.setOnClickListener(this::onCancelClick)
 
-        habitName.addTextChangedListener { text ->  viewModel.habit.name = text.toString()}
-        habitDescription.addTextChangedListener { text ->  viewModel.habit.description = text.toString()}
-        habitDescription.addTextChangedListener { text ->  viewModel.habit.description = text.toString()}
+        habitName.addTextChangedListener { text ->
+            nameWarning.visibility = View.INVISIBLE
+            viewModel.habit.name = text.toString()
+        }
+        habitDescription.addTextChangedListener { text ->
+            descriptionWarning.visibility = View.INVISIBLE
+            viewModel.habit.description = text.toString()
+        }
+        habitDescription.addTextChangedListener { text -> viewModel.habit.description = text.toString()}
         habitRepeatsCount.addTextChangedListener{ text -> viewModel.habit.repeatsCount = text.toString().toIntOrNull() ?: 0 }
         habitRepeatDays.addTextChangedListener{ text -> viewModel.habit.daysPeriod = text.toString().toIntOrNull() ?: 0 }
 
@@ -155,7 +162,7 @@ class HabitEditingFragment : Fragment() {
         habitPriority.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
             override fun onNothingSelected(parent: AdapterView<*>?){}
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                viewModel.habit.priority = habitPriority.selectedItem.toString()
+                viewModel.habit.priority = HabitPriority.fromInt(id.toInt())
             }
         }
     }
@@ -165,7 +172,7 @@ class HabitEditingFragment : Fragment() {
         habitName.setText(habit?.name ?: "")
         habitDescription.setText(habit?.description ?: "")
         habitType.check(getCheckedButtonId(habitType, getHabitTypeString(habit?.type)))
-        habitPriority.setSelection(getSelectedItemPosition(habitPriority, habit?.priority))
+        habitPriority.setSelection(getSelectedItemPosition(habitPriority, getHabitPriorityString(habit?.priority)))
         habitRepeatDays.setText(habit?.daysPeriod.toString())
         habitRepeatsCount.setText(habit?.repeatsCount.toString())
     }
@@ -196,8 +203,27 @@ class HabitEditingFragment : Fragment() {
         }
     }
 
+    private fun getHabitPriorityString(priority: HabitPriority?): String =
+        resources.getStringArray(R.array.habit_priorities)[priority?.value ?: 0]
+
+    private fun validateName(): Boolean{
+        if (viewModel.habit.name.isNotEmpty())
+            return true
+        nameWarning.visibility = View.VISIBLE
+        return false
+    }
+
+    private fun validateDescription(): Boolean{
+        if (viewModel.habit.description.isNotEmpty())
+            return true
+        descriptionWarning.visibility = View.VISIBLE
+        return false
+    }
+
     @Suppress("UNUSED_PARAMETER")
     private fun onSaveClick(view: View) {
+        if (!validateName() || !validateDescription()) return
+
         viewModel.saveHabit()
         requireActivity().findNavController(R.id.nav_host_fragment)
             .navigate(R.id.action_habitEditingFragment_to_mainFragment)

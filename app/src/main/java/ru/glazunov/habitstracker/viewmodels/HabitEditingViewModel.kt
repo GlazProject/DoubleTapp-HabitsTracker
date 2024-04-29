@@ -8,25 +8,22 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.savedstate.SavedStateRegistryOwner
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
+import ru.glazunov.habitstracker.data.IHabitsRepository
 import ru.glazunov.habitstracker.models.Habit
-import ru.glazunov.habitstracker.repository.local.HabitDao
 import java.util.*
-import kotlin.coroutines.CoroutineContext
 
 class HabitEditingViewModel(
     private val owner: LifecycleOwner,
-    private val dao: HabitDao) : ViewModel() {
+    private val repo: IHabitsRepository) : ViewModel() {
     var habit: Habit = Habit()
 
     fun getHabit(id: UUID): LiveData<Habit> =
-        dao.getHabit(id.toString()).also { it.observe(owner){ habit -> this.habit = habit} }
+        repo.getHabit(id).also { it.observe(owner){ habit -> this.habit = habit }}
 
     fun saveHabit() = viewModelScope.launch(IO) {
-        dao.putHabit(habit)
+        repo.putHabit(habit.apply { habit.isModified = true })
     }
 
     companion object {
@@ -34,7 +31,7 @@ class HabitEditingViewModel(
 
         @Suppress("UNCHECKED_CAST")
         fun provideFactory(
-            dao: HabitDao,
+            repo: IHabitsRepository,
             owner: SavedStateRegistryOwner,
             defaultArgs: Bundle? = null,
         ): AbstractSavedStateViewModelFactory =
@@ -45,7 +42,7 @@ class HabitEditingViewModel(
                     handle: SavedStateHandle
                 ): T {
                     if (instance == null)
-                        instance = HabitEditingViewModel(owner, dao)
+                        instance = HabitEditingViewModel(owner, repo)
                     return instance!! as T
                 }
             }
