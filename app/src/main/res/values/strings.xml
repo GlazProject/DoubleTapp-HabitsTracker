@@ -33,12 +33,6 @@
         <item>Средний</item>
         <item>Низкий</item>
     </string-array>
-    <string name="title_activity_navigation">navigation</string>
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="nav_header_title">Android Studio</string>
-    <string name="nav_header_subtitle">android.studio@android.com</string>
-    <string name="nav_header_desc">Navigation header</string>
 
     <string name="app_info_menu_title">О приложении</string>
     <string name="search">Поиск</string>
@@ -48,4 +42,6 @@
     <string name="ascending">Я-А</string>
     <string name="description_warning">Описание не должно быть пустым</string>
     <string name="name_warning">Название не должно быть пустым</string>
+    <string name="title_habit_information">Информация о привычке</string>
+    <string name="profile_image_description">Фотография профиля</string>
 </resources>

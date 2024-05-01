@@ -4,8 +4,13 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
-import androidx.navigation.Navigation
+import androidx.navigation.findNavController
+import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.navigateUp
+import androidx.navigation.ui.setupActionBarWithNavController
+import androidx.navigation.ui.setupWithNavController
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.app_bar_main.toolbar
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import ru.glazunov.habitstracker.data.HabitsRepository
@@ -14,28 +19,22 @@ import ru.glazunov.habitstracker.models.Constants
 
 class MainActivity : AppCompatActivity() {
     private lateinit var navController: NavController
+    private lateinit var appBarConfiguration: AppBarConfiguration
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.activity_main)
-        navController = Navigation.findNavController(this, R.id.nav_host_fragment)
-        nav_view.setNavigationItemSelectedListener {
-            when (it.itemId) {
-                R.id.nav_info -> {
-                    onAppInfoMenuClick()
-                    drawerLayout.closeDrawers()
-                    true
-                }
-                R.id.nav_habits -> {
-                    onHabitsListMenuClick()
-                    drawerLayout.closeDrawers()
-                    true
-                }
+        setSupportActionBar(toolbar)
 
-                else -> false
-            }
-        }
+        navController = findNavController(R.id.nav_host_fragment)
+        appBarConfiguration = AppBarConfiguration(
+            setOf(
+                R.id.nav_habits, R.id.nav_info
+            ), drawerLayout
+        )
+        setupActionBarWithNavController(navController, appBarConfiguration)
+        nav_view.setupWithNavController(navController)
 
         refreshLayout.setOnRefreshListener {
             lifecycleScope.launch(Dispatchers.IO) {
@@ -54,7 +53,6 @@ class MainActivity : AppCompatActivity() {
         outState.putBundle(Constants.FieldNames.NAV_CONTROLLER_STATE, navController.saveState())
     }
 
-    private fun onHabitsListMenuClick() = navController.navigate(R.id.mainFragment)
-
-    private fun onAppInfoMenuClick() = navController.navigate(R.id.appInfoFragment)
+    override fun onSupportNavigateUp(): Boolean =
+        navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
 }

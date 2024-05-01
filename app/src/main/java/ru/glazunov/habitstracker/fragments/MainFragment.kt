@@ -13,7 +13,9 @@ import androidx.navigation.findNavController
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.android.synthetic.main.fragment_bottom_sheet.*
-import kotlinx.android.synthetic.main.fragment_main.*
+import kotlinx.android.synthetic.main.fragment_habits_main.fab
+import kotlinx.android.synthetic.main.fragment_habits_main.mainPager
+import kotlinx.android.synthetic.main.fragment_habits_main.tabs
 import ru.glazunov.habitstracker.R
 import ru.glazunov.habitstracker.adapters.HabitsViewPagerAdapter
 import ru.glazunov.habitstracker.data.HabitsRepository
@@ -37,7 +39,7 @@ class MainFragment: Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         habitTypesList = arrayListOf(getString(R.string.positive_habits), getString(R.string.negative_habits))
-        return inflater.inflate(R.layout.fragment_main, container, false)
+        return inflater.inflate(R.layout.fragment_habits_main, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
