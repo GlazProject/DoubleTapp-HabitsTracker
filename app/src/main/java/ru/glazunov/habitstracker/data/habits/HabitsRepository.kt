@@ -1,4 +1,4 @@
-package ru.glazunov.habitstracker.data
+package ru.glazunov.habitstracker.data.habits
 
 import android.content.Context
 import android.net.ConnectivityManager
@@ -15,11 +15,11 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import retrofit2.Response
 import ru.glazunov.habitstracker.R
-import ru.glazunov.habitstracker.data.local.HabitsDatabase
-import ru.glazunov.habitstracker.data.remote.RemoteHabitRepository
-import ru.glazunov.habitstracker.data.remote.mapping.HabitMapping
-import ru.glazunov.habitstracker.data.remote.models.Uid
-import ru.glazunov.habitstracker.data.remote.models.Habit as NetworkHabit
+import ru.glazunov.habitstracker.data.habits.local.HabitsDatabase
+import ru.glazunov.habitstracker.data.habits.remote.RemoteHabitRepository
+import ru.glazunov.habitstracker.data.habits.remote.mapping.HabitMapping
+import ru.glazunov.habitstracker.data.habits.remote.models.Uid
+import ru.glazunov.habitstracker.data.habits.remote.models.Habit as NetworkHabit
 import ru.glazunov.habitstracker.models.Habit as LocalHabit
 import ru.glazunov.habitstracker.models.HabitType
 import ru.glazunov.habitstracker.models.Ordering

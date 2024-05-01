@@ -11,7 +11,7 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import kotlinx.android.synthetic.main.fragment_bottom_sheet.*
 import ru.glazunov.habitstracker.R
-import ru.glazunov.habitstracker.data.HabitsRepository
+import ru.glazunov.habitstracker.data.habits.HabitsRepository
 import ru.glazunov.habitstracker.models.Ordering
 import ru.glazunov.habitstracker.viewmodels.HabitsListViewModel
 

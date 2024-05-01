@@ -1,4 +1,4 @@
-package ru.glazunov.habitstracker.data.remote.interceptors
+package ru.glazunov.habitstracker.data.habits.remote.interceptors
 
 import okhttp3.Interceptor
 import okhttp3.Response

@@ -21,7 +21,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
 import kotlinx.android.synthetic.main.fragment_habit_editing.*
 import ru.glazunov.habitstracker.*
-import ru.glazunov.habitstracker.data.HabitsRepository
+import ru.glazunov.habitstracker.data.habits.HabitsRepository
 import ru.glazunov.habitstracker.models.Constants
 import ru.glazunov.habitstracker.models.Habit
 import ru.glazunov.habitstracker.models.HabitType

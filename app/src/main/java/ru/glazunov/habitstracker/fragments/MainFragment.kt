@@ -18,7 +18,7 @@ import kotlinx.android.synthetic.main.fragment_habits_main.mainPager
 import kotlinx.android.synthetic.main.fragment_habits_main.tabs
 import ru.glazunov.habitstracker.R
 import ru.glazunov.habitstracker.adapters.HabitsViewPagerAdapter
-import ru.glazunov.habitstracker.data.HabitsRepository
+import ru.glazunov.habitstracker.data.habits.HabitsRepository
 import ru.glazunov.habitstracker.models.Ordering
 import ru.glazunov.habitstracker.viewmodels.HabitsListViewModel
 

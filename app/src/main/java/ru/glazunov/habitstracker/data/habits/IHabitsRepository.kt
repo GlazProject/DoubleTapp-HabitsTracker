@@ -1,4 +1,4 @@
-package ru.glazunov.habitstracker.data
+package ru.glazunov.habitstracker.data.habits
 
 import androidx.lifecycle.LiveData
 import ru.glazunov.habitstracker.models.Habit

@@ -1,11 +1,11 @@
-package ru.glazunov.habitstracker.data.remote.mapping
+package ru.glazunov.habitstracker.data.habits.remote.mapping
 
 import android.graphics.Color
 import ru.glazunov.habitstracker.models.HabitPriority
 import ru.glazunov.habitstracker.models.HabitType
 import java.time.Clock
 import java.util.UUID
-import ru.glazunov.habitstracker.data.remote.models.Habit as NetworkHabit
+import ru.glazunov.habitstracker.data.habits.remote.models.Habit as NetworkHabit
 import ru.glazunov.habitstracker.models.Habit as LocalHabit
 
 class HabitMapping {

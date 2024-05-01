@@ -4,7 +4,7 @@ import android.graphics.Color
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.TypeConverters
-import ru.glazunov.habitstracker.data.local.UUIDConverter
+import ru.glazunov.habitstracker.data.habits.local.UUIDConverter
 import java.util.*
 
 @Entity(tableName = "habits")

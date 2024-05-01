@@ -8,7 +8,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.savedstate.SavedStateRegistryOwner
-import ru.glazunov.habitstracker.data.IHabitsRepository
+import ru.glazunov.habitstracker.data.habits.IHabitsRepository
 import ru.glazunov.habitstracker.models.Habit
 import ru.glazunov.habitstracker.models.HabitListViewModelState
 import ru.glazunov.habitstracker.models.HabitType

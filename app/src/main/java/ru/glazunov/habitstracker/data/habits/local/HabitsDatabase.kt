@@ -1,4 +1,4 @@
-package ru.glazunov.habitstracker.data.local
+package ru.glazunov.habitstracker.data.habits.local
 
 import android.content.Context
 import androidx.room.Database

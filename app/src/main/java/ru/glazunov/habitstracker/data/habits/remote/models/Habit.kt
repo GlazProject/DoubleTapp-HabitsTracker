@@ -1,4 +1,4 @@
-package ru.glazunov.habitstracker.data.remote.models
+package ru.glazunov.habitstracker.data.habits.remote.models
 
 import java.io.Serializable
 

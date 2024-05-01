@@ -1,10 +1,10 @@
-package ru.glazunov.habitstracker.data.remote
+package ru.glazunov.habitstracker.data.habits.remote
 
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import ru.glazunov.habitstracker.BuildConfig
-import ru.glazunov.habitstracker.data.remote.interceptors.AuthInterceptor
+import ru.glazunov.habitstracker.data.habits.remote.interceptors.AuthInterceptor
 import java.util.concurrent.TimeUnit
 
 class RemoteHabitRepository {
