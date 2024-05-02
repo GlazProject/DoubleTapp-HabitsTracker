@@ -18,7 +18,9 @@ class HabitMapping {
             repeatsCount = habit.count ?: 0,
             daysPeriod = habit.frequency ?: 0,
             color = habit.color ?: Color.WHITE,
-            id = UUID.fromString(habit.uid)
+            id = UUID.fromString(habit.uid),
+            isLocal = false,
+            isModified = false
         )
 
         fun map(habit: LocalHabit): NetworkHabit = NetworkHabit(

@@ -118,11 +118,13 @@ class HabitsRepository(private val context: Context, private val lifecycleOwner:
         if (!habit.isModified) return
         Log.d("HabitRepo.syncHabit", "Synchronizing habit: $habit")
         val newId = putHabitToNetwork(HabitMapping.map(habit)) ?: return
-        localHabitsDao.deleteHabit(habit.id.toString())
-        habit.id = UUID.fromString(newId.uid)
-        habit.isLocal = false
-        habit.isModified = false
-        localHabitsDao.putHabit(habit)
+        if (habit.isLocal) {
+            localHabitsDao.deleteHabit(habit.id.toString())
+            habit.id = UUID.fromString(newId.uid)
+            habit.isLocal = false
+            habit.isModified = false
+            localHabitsDao.putHabit(habit)
+        }
         Log.d("HabitRepo.syncHabit", "Habit synchronized successfully")
     }
 

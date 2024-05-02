@@ -24,7 +24,8 @@ class HabitEditingViewModel(
         repo.getHabit(id).also { it.observe(owner){ habit -> this.habit = habit }}
 
     fun saveHabit() = viewModelScope.launch(IO) {
-        repo.putHabit(habit.apply { habit.isModified = true })
+        habit.isModified = true
+        repo.putHabit(habit)
     }
 
     companion object {
