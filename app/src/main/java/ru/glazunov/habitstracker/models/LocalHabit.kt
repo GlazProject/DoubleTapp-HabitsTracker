@@ -17,7 +17,7 @@ data class LocalHabit(
     var repeatsCount: Int = 0,
     var daysPeriod: Int = 0,
     var color: Int = Color.WHITE,
-    var isModified: Boolean = true,
-    var isLocal: Boolean = true,
+    var networkId: String? = null,
+    var modified: Boolean = true,
     @PrimaryKey(autoGenerate = false) var id: UUID = UUID.randomUUID()
 )

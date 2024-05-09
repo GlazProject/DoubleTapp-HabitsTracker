@@ -9,7 +9,8 @@ import java.util.UUID
 
 interface IHabitsRepository {
     suspend fun putHabit(habit: LocalHabit)
-    suspend fun syncHabits(scope: CoroutineScope)
+    suspend fun syncHabits()
+    suspend fun deleteHabit(habit: LocalHabit)
     fun getHabit(id: UUID): LiveData<LocalHabit>
     fun getHabits(
         habitType: HabitType,

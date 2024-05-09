@@ -1,6 +1,7 @@
 package ru.glazunov.habitstracker.viewmodels
 
 import android.os.Bundle
+import android.util.Log
 import androidx.lifecycle.AbstractSavedStateViewModelFactory
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
@@ -26,7 +27,8 @@ class HabitsListViewModel(
     private val negativeHabits: MutableLiveData<List<LocalHabit>> = MutableLiveData()
 
     init {
-        viewModelScope.launch(IO) { repo.syncHabits(viewModelScope)}
+        Log.w("hvm", "Create habits list vm")
+        viewModelScope.launch(IO) { repo.syncHabits()}
         selectByState()
     }
 

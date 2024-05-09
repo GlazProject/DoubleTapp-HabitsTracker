@@ -3,9 +3,7 @@ package ru.glazunov.habitstracker.data.habits
 import android.content.Context
 import android.util.Log
 import androidx.lifecycle.LiveData
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import retrofit2.Response
 import ru.glazunov.habitstracker.data.habits.local.HabitsDatabase
@@ -28,7 +26,16 @@ class HabitsRepository(context: Context): IHabitsRepository {
         syncHabit(habit)
     }
 
-    override fun getHabit(id: UUID): LiveData<LocalHabit> = localHabitsDao.getHabit(id.toString())
+    override suspend fun deleteHabit(habit: LocalHabit) {
+        Log.d("HabitRepo.deleteHabit", "Deleting habit: $habit")
+        localHabitsDao.deleteHabit(habit.id.toString())
+        deleteHabitFromNetwork(habit)
+    }
+
+    override fun getHabit(id: UUID): LiveData<LocalHabit> {
+        Log.d("HabitRepo.getHabit", "Send get request to DB for id: $id")
+        return localHabitsDao.getHabit(id.toString())
+    }
 
     override fun getHabits(
         habitType: HabitType,
@@ -47,6 +54,11 @@ class HabitsRepository(context: Context): IHabitsRepository {
     private suspend fun putHabitToNetwork(habit: NetworkHabit): Uid? = withContext(IO) {
         Log.d("HabitRepo.network", "Sending habit to network: $habit")
         sendRequest { habitsApi.putHabit(habit) }
+    }
+
+    private suspend fun deleteHabitFromNetwork(habit: LocalHabit) = withContext(IO) {
+        Log.d("HabitRepo.network", "Delete habit from network: $habit")
+        sendRequest { habitsApi.deleteHabit(Uid(uid = habit.networkId)) }
     }
 
     private suspend fun <T> sendRequest(method: suspend () -> Response<T>): T? {
@@ -69,33 +81,39 @@ class HabitsRepository(context: Context): IHabitsRepository {
     }
 
     private suspend fun syncHabit(habit: LocalHabit) {
-        if (!habit.isModified) return
-        Log.d("HabitRepo.syncHabit", "Synchronizing habit: $habit")
+        if (!habit.modified) return
         val newId = putHabitToNetwork(HabitMapping.map(habit)) ?: return
-        if (habit.isLocal) {
-            localHabitsDao.deleteHabit(habit.id.toString())
-            habit.id = UUID.fromString(newId.uid)
-            habit.isLocal = false
-            habit.isModified = false
-            localHabitsDao.putHabit(habit)
-        }
+        habit.networkId = newId.uid
+        habit.modified = false
+        localHabitsDao.putHabit(habit)
         Log.d("HabitRepo.syncHabit", "Habit synchronized successfully")
     }
 
-    override suspend fun syncHabits(scope: CoroutineScope) {
-        getHabitsFromNetwork()?.forEach { habit ->
-            localHabitsDao.putHabit(HabitMapping.map(habit))
+    override suspend fun syncHabits() {
+        val localHabits = localHabitsDao.getHabits()
+        val networkHabits = getHabitsFromNetwork()
+
+        for (habit in networkHabits?: listOf()) {
+            val localHabit = localHabits.firstOrNull { it.networkId == habit.uid }
+            localHabitsDao.putHabit(
+                HabitMapping.map(habit, localHabit?.id ?: UUID.randomUUID())
+            )
         }
-        localHabitsDao.getHabits().value?.forEach{ habit ->
-            scope.launch(IO){ syncHabit(habit) }}
+
+        localHabits.filter { it.networkId != null }.forEach{habit ->
+            if (networkHabits?.firstOrNull{it.uid == habit.networkId} != null)
+                syncHabit(habit)
+            else
+                localHabitsDao.deleteHabit(habit.id.toString())
+        }
+
+        localHabits.filter { it.networkId == null }.forEach{syncHabit(it)}
     }
 
     companion object {
         private var instance: IHabitsRepository? = null
         fun getInstance(context: Context): IHabitsRepository {
-            if (instance == null) {
-                instance = HabitsRepository(context)
-            }
+            if (instance == null) instance = HabitsRepository(context)
             return instance!!
         }
     }

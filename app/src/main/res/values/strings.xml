@@ -44,4 +44,5 @@
     <string name="name_warning">Название не должно быть пустым</string>
     <string name="title_habit_information">Информация о привычке</string>
     <string name="profile_image_description">Фотография профиля</string>
+    <string name="delete">Удалить</string>
 </resources>

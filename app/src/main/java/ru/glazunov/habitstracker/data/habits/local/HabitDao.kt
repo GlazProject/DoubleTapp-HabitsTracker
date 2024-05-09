@@ -18,7 +18,7 @@ interface HabitDao {
     fun getHabit(id: String) : LiveData<LocalHabit>
 
     @Query("SELECT * FROM habits")
-    fun getHabits(): LiveData<List<LocalHabit>>
+    suspend fun getHabits(): List<LocalHabit>
 
     @Query("SELECT * FROM habits WHERE type = :habitType")
     fun getHabitsByType(habitType: HabitType): LiveData<List<LocalHabit>>

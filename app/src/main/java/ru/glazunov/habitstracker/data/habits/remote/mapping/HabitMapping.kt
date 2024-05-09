@@ -10,7 +10,7 @@ import ru.glazunov.habitstracker.models.LocalHabit as LocalHabit
 
 class HabitMapping {
     companion object{
-        fun map(habit: NetworkHabit): LocalHabit = LocalHabit(
+        fun map(habit: NetworkHabit, localId: UUID): LocalHabit = LocalHabit(
             name = habit.title ?: "",
             description = habit.description ?: "",
             type = HabitType.fromInt(habit.type ?: 0),
@@ -18,9 +18,9 @@ class HabitMapping {
             repeatsCount = habit.count ?: 0,
             daysPeriod = habit.frequency ?: 0,
             color = habit.color ?: Color.WHITE,
-            id = UUID.fromString(habit.uid),
-            isLocal = false,
-            isModified = false
+            networkId = habit.uid,
+            modified = false,
+            id = localId
         )
 
         fun map(habit: LocalHabit): NetworkHabit = NetworkHabit(
@@ -32,7 +32,7 @@ class HabitMapping {
             title = habit.name,
             type = habit.type.value,
             date = Clock.systemUTC().millis().toInt(),
-            uid = if (habit.isLocal) "" else habit.id.toString()
+            uid = habit.networkId ?: ""
         )
     }
 }

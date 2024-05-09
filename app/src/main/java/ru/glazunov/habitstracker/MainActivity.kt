@@ -2,6 +2,7 @@ package ru.glazunov.habitstracker
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.doOnLayout
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
@@ -43,16 +44,16 @@ class MainActivity : AppCompatActivity() {
 
         refreshLayout.setOnRefreshListener {
             lifecycleScope.launch(Dispatchers.IO) {
-                HabitsRepository.getInstance(applicationContext).syncHabits(lifecycleScope)
+                HabitsRepository.getInstance(applicationContext).syncHabits()
             }
             refreshLayout.isRefreshing = false
         }
 
+        drawerLayout.doOnLayout { loadProfileImage() }
+
         if (savedInstanceState != null) {
             navController.restoreState(savedInstanceState.getBundle(Constants.FieldNames.NAV_CONTROLLER_STATE))
         }
-
-        loadProfileImage()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -63,12 +64,11 @@ class MainActivity : AppCompatActivity() {
     override fun onSupportNavigateUp(): Boolean =
         navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
 
-    private fun loadProfileImage(){
-        lifecycleScope.launch(Dispatchers.Main) {
-            Picasso.with(this@MainActivity)
-                .load("https://gas-kvas.com/grafic/uploads/posts/2023-09/1695822868_gas-kvas-com-p-kartinki-milie-kotiki-13.jpg")
-                .transform(CircleTransform())
-                .into(profileImage)
-        }
+    private fun loadProfileImage() {
+        Picasso.with(this@MainActivity)
+            .load("https://gas-kvas.com/grafic/uploads/posts/2023-09/1695822868_gas-kvas-com-p-kartinki-milie-kotiki-13.jpg")
+            .transform(CircleTransform())
+            .error(R.drawable.ic_account_circle_black_24dp)
+            .into(profileImage)
     }
 }

@@ -207,23 +207,28 @@
                     android:id="@+id/cancelButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="68dp"
-                    android:onClick="onCancelClick"
                     android:text="@string/cancel"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@+id/saveButton"
+                    app:layout_constraintEnd_toStartOf="@+id/deleteButton"
                     app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <Button
+                    android:id="@+id/deleteButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/delete"
+                    app:layout_constraintEnd_toStartOf="@+id/saveButton"
+                    app:layout_constraintStart_toEndOf="@+id/cancelButton"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <Button
                     android:id="@+id/saveButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:onClick="onSaveClick"
                     android:text="@string/save"
-                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/cancelButton" />
+                    app:layout_constraintStart_toEndOf="@+id/deleteButton"
+                    app:layout_constraintTop_toTopOf="parent" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
         </LinearLayout>

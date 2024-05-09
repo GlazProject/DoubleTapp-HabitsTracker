@@ -47,8 +47,8 @@ class HabitEditingFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        if (savedInstanceState == null)
-            arguments?.let { loadHabit(it) }
+        viewModel.reset(viewLifecycleOwner)
+        arguments?.let { loadHabit(it) }
     }
 
     override fun onViewStateRestored(savedInstanceState: Bundle?) {
@@ -68,9 +68,7 @@ class HabitEditingFragment : Fragment() {
 
     private fun loadHabit(bundle: Bundle) {
         val id = UUID.fromString(bundle.getString(Constants.FieldNames.ID))
-        viewModel.getHabit(id).observe(viewLifecycleOwner){ habit ->
-            updateViews(habit)
-        }
+        viewModel.getHabit(id).observe(viewLifecycleOwner){updateViews(it)}
     }
 
     private fun createColorButtons() {
@@ -138,6 +136,7 @@ class HabitEditingFragment : Fragment() {
     private fun setListeners() {
         saveButton.setOnClickListener(this::onSaveClick)
         cancelButton.setOnClickListener(this::onCancelClick)
+        deleteButton.setOnClickListener(this::onDeleteClick)
 
         habitName.addTextChangedListener { text ->
             nameWarning.visibility = View.INVISIBLE
@@ -225,6 +224,13 @@ class HabitEditingFragment : Fragment() {
         if (!validateName() || !validateDescription()) return
 
         viewModel.saveHabit()
+        requireActivity().findNavController(R.id.nav_host_fragment)
+            .navigate(R.id.action_habitEditingFragment_to_mainFragment)
+    }
+
+    @Suppress("UNUSED_PARAMETER")
+    private fun onDeleteClick(view: View) {
+        viewModel.deleteHabit()
         requireActivity().findNavController(R.id.nav_host_fragment)
             .navigate(R.id.action_habitEditingFragment_to_mainFragment)
     }
