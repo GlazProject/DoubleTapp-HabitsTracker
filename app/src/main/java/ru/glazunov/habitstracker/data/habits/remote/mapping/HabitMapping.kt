@@ -5,8 +5,8 @@ import ru.glazunov.habitstracker.models.HabitPriority
 import ru.glazunov.habitstracker.models.HabitType
 import java.time.Clock
 import java.util.UUID
-import ru.glazunov.habitstracker.data.habits.remote.models.Habit as NetworkHabit
-import ru.glazunov.habitstracker.models.Habit as LocalHabit
+import ru.glazunov.habitstracker.data.habits.remote.models.NetworkHabit as NetworkHabit
+import ru.glazunov.habitstracker.models.LocalHabit as LocalHabit
 
 class HabitMapping {
     companion object{

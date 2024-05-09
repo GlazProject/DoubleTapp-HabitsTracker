@@ -9,7 +9,7 @@ import java.util.*
 
 @Entity(tableName = "habits")
 @TypeConverters(UUIDConverter::class)
-data class Habit(
+data class LocalHabit(
     var name: String = "",
     var description: String = "",
     var type: HabitType = HabitType.POSITIVE,

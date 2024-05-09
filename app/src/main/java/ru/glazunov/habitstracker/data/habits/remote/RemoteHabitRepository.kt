@@ -1,6 +1,7 @@
 package ru.glazunov.habitstracker.data.habits.remote
 
 import okhttp3.OkHttpClient
+import okhttp3.internal.http.RetryAndFollowUpInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import ru.glazunov.habitstracker.BuildConfig
@@ -15,13 +16,16 @@ class RemoteHabitRepository {
 
         fun getInstance(): HabitsApi {
             if (instance == null) {
+                val client = OkHttpClient.Builder()
+                    .connectTimeout(30, TimeUnit.SECONDS)
+                    .readTimeout(30, TimeUnit.SECONDS)
+                    .addInterceptor(AuthInterceptor(API_KEY))
+                    .followSslRedirects(true)
+                    .build()
                 val retrofit = Retrofit.Builder()
                     .client(
-                        OkHttpClient.Builder()
-                            .connectTimeout(30, TimeUnit.SECONDS)
-                            .readTimeout(30, TimeUnit.SECONDS)
-                            .addInterceptor(AuthInterceptor(API_KEY))
-                            .followSslRedirects(true)
+                        client.newBuilder()
+                            .addInterceptor(RetryAndFollowUpInterceptor(client))
                             .build()
                     )
                     .baseUrl(BASE_URL)

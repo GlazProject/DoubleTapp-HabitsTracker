@@ -18,7 +18,7 @@ import ru.glazunov.habitstracker.viewmodels.HabitsListViewModel
 class BottomSheetFragment : BottomSheetDialogFragment() {
     private val viewModel: HabitsListViewModel by viewModels {
     HabitsListViewModel.provideFactory(
-        HabitsRepository.getInstance(requireContext(), requireActivity()),
+        HabitsRepository.getInstance(requireContext()),
         requireActivity(),
         this
     )

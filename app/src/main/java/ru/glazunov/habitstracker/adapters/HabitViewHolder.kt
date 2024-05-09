@@ -7,7 +7,7 @@ import androidx.navigation.NavController
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.view_habit_info.view.*
 import ru.glazunov.habitstracker.models.Constants
-import ru.glazunov.habitstracker.models.Habit
+import ru.glazunov.habitstracker.models.LocalHabit
 import ru.glazunov.habitstracker.R
 import ru.glazunov.habitstracker.models.HabitPriority
 import ru.glazunov.habitstracker.models.HabitType
@@ -17,13 +17,13 @@ class HabitViewHolder(
     private val context: Context,
     private val navController: NavController,
 ) : RecyclerView.ViewHolder(view), View.OnClickListener {
-    var habit = Habit()
+    var habit = LocalHabit()
 
     init {
         view.setOnClickListener(this)
     }
 
-    fun bind(habit: Habit) {
+    fun bind(habit: LocalHabit) {
         view.name.text = habit.name
         view.description.text = habit.description
         view.type.text = getHabitTypeString(habit.type)

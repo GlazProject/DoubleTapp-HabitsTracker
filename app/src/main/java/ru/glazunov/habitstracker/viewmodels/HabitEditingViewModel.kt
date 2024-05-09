@@ -11,16 +11,16 @@ import androidx.savedstate.SavedStateRegistryOwner
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
 import ru.glazunov.habitstracker.data.habits.IHabitsRepository
-import ru.glazunov.habitstracker.models.Habit
+import ru.glazunov.habitstracker.models.LocalHabit
 import java.util.*
 
 class HabitEditingViewModel(
     private val owner: LifecycleOwner,
     private val repo: IHabitsRepository
 ) : ViewModel() {
-    var habit: Habit = Habit()
+    var habit: LocalHabit = LocalHabit()
 
-    fun getHabit(id: UUID): LiveData<Habit> =
+    fun getHabit(id: UUID): LiveData<LocalHabit> =
         repo.getHabit(id).also { it.observe(owner){ habit -> this.habit = habit }}
 
     fun saveHabit() = viewModelScope.launch(IO) {

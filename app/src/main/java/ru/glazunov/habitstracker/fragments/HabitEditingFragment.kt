@@ -23,7 +23,7 @@ import kotlinx.android.synthetic.main.fragment_habit_editing.*
 import ru.glazunov.habitstracker.*
 import ru.glazunov.habitstracker.data.habits.HabitsRepository
 import ru.glazunov.habitstracker.models.Constants
-import ru.glazunov.habitstracker.models.Habit
+import ru.glazunov.habitstracker.models.LocalHabit
 import ru.glazunov.habitstracker.models.HabitType
 import ru.glazunov.habitstracker.models.HabitPriority
 import ru.glazunov.habitstracker.viewmodels.HabitEditingViewModel
@@ -34,7 +34,7 @@ class HabitEditingFragment : Fragment() {
     private val colorPickerSquaresNumber = 16
     private val viewModel: HabitEditingViewModel by viewModels {
         HabitEditingViewModel.provideFactory(
-            HabitsRepository.getInstance(requireContext(), requireActivity()),
+            HabitsRepository.getInstance(requireContext()),
             this
         )
     }
@@ -167,7 +167,7 @@ class HabitEditingFragment : Fragment() {
         }
     }
 
-    private fun updateViews(habit: Habit?) {
+    private fun updateViews(habit: LocalHabit?) {
         chosenColorDisplay.setBackgroundColor(habit?.color ?: Color.WHITE)
         habitName.setText(habit?.name ?: "")
         habitDescription.setText(habit?.description ?: "")

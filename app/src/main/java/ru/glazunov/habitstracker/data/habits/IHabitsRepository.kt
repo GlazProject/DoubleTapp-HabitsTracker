@@ -1,18 +1,19 @@
 package ru.glazunov.habitstracker.data.habits
 
 import androidx.lifecycle.LiveData
-import ru.glazunov.habitstracker.models.Habit
+import kotlinx.coroutines.CoroutineScope
+import ru.glazunov.habitstracker.models.LocalHabit
 import ru.glazunov.habitstracker.models.HabitType
 import ru.glazunov.habitstracker.models.Ordering
 import java.util.UUID
 
 interface IHabitsRepository {
-    suspend fun putHabit(habit: Habit)
-    suspend fun syncHabits()
-    fun getHabit(id: UUID): LiveData<Habit>
+    suspend fun putHabit(habit: LocalHabit)
+    suspend fun syncHabits(scope: CoroutineScope)
+    fun getHabit(id: UUID): LiveData<LocalHabit>
     fun getHabits(
         habitType: HabitType,
         namePrefix: String = "",
         ordering: Ordering = Ordering.Ascending
-    ): LiveData<List<Habit>>
+    ): LiveData<List<LocalHabit>>
 }

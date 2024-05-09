@@ -1,42 +1,26 @@
 package ru.glazunov.habitstracker.data.habits
 
 import android.content.Context
-import android.net.ConnectivityManager
 import android.util.Log
-import android.widget.Toast
-import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.lifecycleScope
-import kotlinx.coroutines.CoroutineExceptionHandler
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import retrofit2.Response
-import ru.glazunov.habitstracker.R
 import ru.glazunov.habitstracker.data.habits.local.HabitsDatabase
 import ru.glazunov.habitstracker.data.habits.remote.RemoteHabitRepository
 import ru.glazunov.habitstracker.data.habits.remote.mapping.HabitMapping
 import ru.glazunov.habitstracker.data.habits.remote.models.Uid
-import ru.glazunov.habitstracker.data.habits.remote.models.Habit as NetworkHabit
-import ru.glazunov.habitstracker.models.Habit as LocalHabit
 import ru.glazunov.habitstracker.models.HabitType
 import ru.glazunov.habitstracker.models.Ordering
 import java.util.UUID
+import ru.glazunov.habitstracker.data.habits.remote.models.NetworkHabit
+import ru.glazunov.habitstracker.models.LocalHabit
 
-class HabitsRepository(private val context: Context, private val lifecycleOwner: LifecycleOwner) :
-    IHabitsRepository {
-
+class HabitsRepository(context: Context): IHabitsRepository {
     private val localHabitsDao = HabitsDatabase.getInstance(context).habitDao()
     private val habitsApi = RemoteHabitRepository.getInstance()
-
-    private val logCoroutineExceptionHandler = CoroutineExceptionHandler{ _, e -> e.printStackTrace() }
-    private val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-
-    init {
-        lifecycleOwner.lifecycleScope.launch(IO + logCoroutineExceptionHandler) { syncHabits() }
-    }
 
     override suspend fun putHabit(habit: LocalHabit) {
         Log.d("HabitRepo.putHabit", "Putting habit: $habit")
@@ -66,53 +50,23 @@ class HabitsRepository(private val context: Context, private val lifecycleOwner:
     }
 
     private suspend fun <T> sendRequest(method: suspend () -> Response<T>): T? {
-         for (retryNumber in 0..MAX_RETRIES) {
-            var response: Response<T>
-            if (connectivityManager.isDefaultNetworkActive) {
-                Log.d(
-                    "HabitRepo.network",
-                    "Sending request to remote server (attempt ${retryNumber + 1})"
-                )
-                try {
-                    response = method()
-                }
-                catch (ex: Exception){
-                    Log.e("HabitRepo.network", "Unable to get response due to $ex. \r\n${ex.stackTraceToString()}")
-                    break
-                }
-
-                if (response.code() == 200) {
-                    Log.d("HabitRepo.network", "Request successful: ${response.body()}")
-                    return response.body()
-                }
-
-                if (response.code() in arrayOf(400, 401, 403, 500)) {
-                    Log.e(
-                        "HabitRepo.network",
-                        "Can not get response from server due to code ${response.code()}. ${response.errorBody()?.string()}"
-                    )
-                    break
-                }
-
-                Log.e(
-                    "HabitRepo.network",
-                    response.message() ?: "Response is null"
-                )
-            } else
-                Log.d("HabitRepo.network", "No network connection, retrying in ${RETRY_TIMEOUT}ms")
-             delay(RETRY_TIMEOUT)
+        val response: Response<T>
+        try {
+            response = method()
+        } catch (ex: Exception) {
+            Log.e(
+                "HabitRepo.network",
+                "Unable to get response due to $ex. \r\n${ex.stackTraceToString()}"
+            )
+            return null
         }
 
-        Log.e("HabitRepo.network", "Failed to fetch habits after $MAX_RETRIES retries")
-
-        withContext(Dispatchers.Main) {
-            Toast.makeText(context, R.string.unable_to_sync_habit, Toast.LENGTH_SHORT).show()
+        if (response.code() == 200) {
+            Log.d("HabitRepo.network", "Request successful: ${response.body()}")
+            return response.body()
         }
-
         return null
     }
-
-    // synchronisation
 
     private suspend fun syncHabit(habit: LocalHabit) {
         if (!habit.isModified) return
@@ -128,22 +82,19 @@ class HabitsRepository(private val context: Context, private val lifecycleOwner:
         Log.d("HabitRepo.syncHabit", "Habit synchronized successfully")
     }
 
-    override suspend fun syncHabits() {
+    override suspend fun syncHabits(scope: CoroutineScope) {
         getHabitsFromNetwork()?.forEach { habit ->
             localHabitsDao.putHabit(HabitMapping.map(habit))
         }
         localHabitsDao.getHabits().value?.forEach{ habit ->
-            lifecycleOwner.lifecycleScope.launch(IO + logCoroutineExceptionHandler){ syncHabit(habit) }}
+            scope.launch(IO){ syncHabit(habit) }}
     }
 
     companion object {
-        private const val MAX_RETRIES: Int = 10
-        private const val RETRY_TIMEOUT: Long = 1000
-
         private var instance: IHabitsRepository? = null
-        fun getInstance(context: Context, lifecycleOwner: LifecycleOwner): IHabitsRepository {
+        fun getInstance(context: Context): IHabitsRepository {
             if (instance == null) {
-                instance = HabitsRepository(context, lifecycleOwner)
+                instance = HabitsRepository(context)
             }
             return instance!!
         }

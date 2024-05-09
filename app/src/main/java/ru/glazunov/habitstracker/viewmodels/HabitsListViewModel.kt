@@ -7,9 +7,12 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import androidx.savedstate.SavedStateRegistryOwner
+import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.launch
 import ru.glazunov.habitstracker.data.habits.IHabitsRepository
-import ru.glazunov.habitstracker.models.Habit
+import ru.glazunov.habitstracker.models.LocalHabit
 import ru.glazunov.habitstracker.models.HabitListViewModelState
 import ru.glazunov.habitstracker.models.HabitType
 import ru.glazunov.habitstracker.models.Ordering
@@ -19,14 +22,15 @@ class HabitsListViewModel(
     private val lifecycleOwner: LifecycleOwner
 ): ViewModel() {
     private val state = HabitListViewModelState()
-    private val positiveHabits: MutableLiveData<List<Habit>> = MutableLiveData()
-    private val negativeHabits: MutableLiveData<List<Habit>> = MutableLiveData()
+    private val positiveHabits: MutableLiveData<List<LocalHabit>> = MutableLiveData()
+    private val negativeHabits: MutableLiveData<List<LocalHabit>> = MutableLiveData()
 
     init {
+        viewModelScope.launch(IO) { repo.syncHabits(viewModelScope)}
         selectByState()
     }
 
-    fun habits(type: HabitType): LiveData<List<Habit>> =
+    fun habits(type: HabitType): LiveData<List<LocalHabit>> =
         when (type) {
             HabitType.NEGATIVE -> negativeHabits
             HabitType.POSITIVE -> positiveHabits
