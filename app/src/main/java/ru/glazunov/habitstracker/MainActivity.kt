@@ -18,12 +18,12 @@ import kotlinx.android.synthetic.main.app_bar_main.toolbar
 import kotlinx.android.synthetic.main.nav_header_main.profileImage
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import ru.glazunov.habitstracker.data.habits.HabitsRepository
 import ru.glazunov.habitstracker.data.profile.converters.CircleTransform
-import ru.glazunov.habitstracker.models.Constants
+import ru.glazunov.habitstracker.domain.repositories.HabitsRepository
 
 
 class MainActivity : AppCompatActivity() {
+    private val NAV_CONTROLLER_STATE = "nav_controller_state"
     private lateinit var navController: NavController
     private lateinit var appBarConfiguration: AppBarConfiguration
 
@@ -44,7 +44,7 @@ class MainActivity : AppCompatActivity() {
 
         refreshLayout.setOnRefreshListener {
             lifecycleScope.launch(Dispatchers.IO) {
-                HabitsRepository.getInstance(applicationContext).syncHabits()
+                HabitsRepository.getInstance(applicationContext, lifecycleScope).syncHabits()
             }
             refreshLayout.isRefreshing = false
         }
@@ -52,13 +52,13 @@ class MainActivity : AppCompatActivity() {
         drawerLayout.doOnLayout { loadProfileImage() }
 
         if (savedInstanceState != null) {
-            navController.restoreState(savedInstanceState.getBundle(Constants.FieldNames.NAV_CONTROLLER_STATE))
+            navController.restoreState(savedInstanceState.getBundle(NAV_CONTROLLER_STATE))
         }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState.putBundle(Constants.FieldNames.NAV_CONTROLLER_STATE, navController.saveState())
+        outState.putBundle(NAV_CONTROLLER_STATE, navController.saveState())
     }
 
     override fun onSupportNavigateUp(): Boolean =

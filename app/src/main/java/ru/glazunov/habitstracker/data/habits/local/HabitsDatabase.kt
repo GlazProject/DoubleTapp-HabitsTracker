@@ -4,7 +4,8 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import ru.glazunov.habitstracker.models.LocalHabit
+import ru.glazunov.habitstracker.data.habits.local.providers.HabitDao
+import ru.glazunov.habitstracker.data.habits.local.models.LocalHabit
 
 
 @Database(entities = [LocalHabit::class], version = 1)

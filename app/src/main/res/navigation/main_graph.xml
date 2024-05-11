@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/nav_habit_editing"
-        android:name="ru.glazunov.habitstracker.fragments.HabitEditingFragment"
+        android:name="ru.glazunov.habitstracker.presentatin.fragments.HabitEditingFragment"
         android:label="@string/title_habit_information"
         tools:layout="@layout/fragment_habit_editing">
         <action
@@ -17,7 +17,7 @@
 
     <fragment
         android:id="@+id/nav_info"
-        android:name="ru.glazunov.habitstracker.fragments.AppInfoFragment"
+        android:name="ru.glazunov.habitstracker.presentatin.fragments.AppInfoFragment"
         android:label="@string/app_info_menu_title"
         tools:layout="@layout/fragment_app_info">
         <action
@@ -27,7 +27,7 @@
 
     <fragment
         android:id="@+id/nav_habits"
-        android:name="ru.glazunov.habitstracker.fragments.MainFragment"
+        android:name="ru.glazunov.habitstracker.presentatin.fragments.MainFragment"
         android:label="@string/habit_list_menu_title"
         tools:layout="@layout/fragment_habits_main">
         <action
