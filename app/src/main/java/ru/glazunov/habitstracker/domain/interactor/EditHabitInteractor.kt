@@ -5,14 +5,23 @@ import ru.glazunov.habitstracker.domain.models.HabitPriority
 import ru.glazunov.habitstracker.domain.models.HabitType
 import ru.glazunov.habitstracker.domain.repositories.HabitsRepository
 import java.util.UUID
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class EditHabitInteractor(
+@Singleton
+class EditHabitInteractor @Inject constructor(
     private val repository: HabitsRepository
 ) {
     private var habit: Habit? = null
 
+    fun init(){
+        habit = Habit()
+    }
+
     suspend fun get(id: UUID): Habit {
-        habit = repository.get(id) ?: Habit()
+        val loadedHabit = repository.get(id)
+        if (loadedHabit != null)
+            habit = loadedHabit
         return habit!!
     }
 
@@ -60,6 +69,6 @@ class EditHabitInteractor(
     }
 
     fun setColor(color: Int){
-        habit!!.count = color
+        habit!!.color = color
     }
 }

@@ -12,6 +12,7 @@ interface ISyncHabitsRepository {
     fun getDeleted(): Flow<List<SyncRecord>>
     fun getModified(): Flow<List<SyncRecord>>
     suspend fun getNotDeleted(): List<SyncRecord>
+    suspend fun gerRecord(id: UUID): SyncRecord?
 
     data class SyncRecord(val id: UUID, val remoteId: String?)
 }

@@ -17,27 +17,20 @@ import androidx.core.view.children
 import androidx.core.view.doOnLayout
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import kotlinx.android.synthetic.main.fragment_habit_editing.*
 import ru.glazunov.habitstracker.*
 import ru.glazunov.habitstracker.domain.models.Habit
 import ru.glazunov.habitstracker.domain.models.HabitType
 import ru.glazunov.habitstracker.domain.models.HabitPriority
-import ru.glazunov.habitstracker.domain.repositories.HabitsRepository
 import ru.glazunov.habitstracker.presentatin.viewmodels.HabitEditingViewModel
 import java.util.UUID
 import kotlin.math.round
 
 class HabitEditingFragment : Fragment() {
     private val colorPickerSquaresNumber = 16
-    private val viewModel: HabitEditingViewModel by viewModels {
-        HabitEditingViewModel.provideFactory(
-            HabitsRepository.getInstance(requireContext(), lifecycleScope),
-            requireActivity()
-        )
-    }
+    private lateinit var viewModel: HabitEditingViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -47,6 +40,8 @@ class HabitEditingFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        viewModel = ViewModelProvider(requireActivity())[HabitEditingViewModel::class.java]
+        viewModel.init()
         arguments?.let { loadHabit(it) }
     }
 

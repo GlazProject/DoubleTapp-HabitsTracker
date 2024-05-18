@@ -7,10 +7,12 @@ import ru.glazunov.habitstracker.data.habits.synchronization.models.HabitStatus
 import ru.glazunov.habitstracker.data.habits.synchronization.providers.HabitSyncDao
 import ru.glazunov.habitstracker.domain.repositories.ISyncHabitsRepository
 import java.util.UUID
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class SyncHabitsRepository(
-    private val dao: HabitSyncDao
-): ISyncHabitsRepository {
+@Singleton
+class SyncHabitsRepository @Inject constructor (private val dao: HabitSyncDao)
+    : ISyncHabitsRepository {
     override suspend fun markSynchronised(id: UUID, remoteId: String?) {
         val record = dao.getRecord(id.toString())
         dao.put(
@@ -54,4 +56,9 @@ class SyncHabitsRepository(
 
     override fun getModified(): Flow<List<ISyncHabitsRepository.SyncRecord>> =
         dao.getModified().map {it.map{ record -> ISyncHabitsRepository.SyncRecord(record.habitId, record.networkId)}}
+
+    override suspend fun gerRecord(id: UUID): ISyncHabitsRepository.SyncRecord? {
+        val record = dao.getRecord(id.toString()) ?: return null
+        return ISyncHabitsRepository.SyncRecord(record.habitId, record.networkId)
+    }
 }

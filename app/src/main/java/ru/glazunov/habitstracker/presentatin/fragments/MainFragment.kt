@@ -8,30 +8,25 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.tabs.TabLayoutMediator
-import kotlinx.android.synthetic.main.fragment_bottom_sheet.*
+import kotlinx.android.synthetic.main.fragment_bottom_sheet.bottom_sheet
+import kotlinx.android.synthetic.main.fragment_bottom_sheet.orderNameAscendingButton
+import kotlinx.android.synthetic.main.fragment_bottom_sheet.orderNameDescendingButton
+import kotlinx.android.synthetic.main.fragment_bottom_sheet.searchEdit
 import kotlinx.android.synthetic.main.fragment_habits_main.fab
 import kotlinx.android.synthetic.main.fragment_habits_main.mainPager
 import kotlinx.android.synthetic.main.fragment_habits_main.tabs
 import ru.glazunov.habitstracker.R
-import ru.glazunov.habitstracker.presentatin.adapters.HabitsViewPagerAdapter
-import ru.glazunov.habitstracker.data.habits.HabitsRepository
 import ru.glazunov.habitstracker.domain.models.Ordering
+import ru.glazunov.habitstracker.presentatin.adapters.HabitsViewPagerAdapter
 import ru.glazunov.habitstracker.presentatin.viewmodels.HabitsListViewModel
 
 class MainFragment: Fragment() {
     private lateinit var habitTypesList: ArrayList<String>
-
-    private val viewModel: HabitsListViewModel by viewModels {
-        HabitsListViewModel.provideFactory(
-            HabitsRepository.getInstance(requireContext(), lifecycleScope),
-            this
-        )
-    }
+    private lateinit var viewModel: HabitsListViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -44,6 +39,7 @@ class MainFragment: Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        viewModel = ViewModelProvider(requireActivity())[HabitsListViewModel::class.java]
         fab.setOnClickListener(this::onFabClick)
 
         BottomSheetBehavior.from(bottom_sheet).state = BottomSheetBehavior.STATE_EXPANDED

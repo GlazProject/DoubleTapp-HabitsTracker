@@ -1,15 +1,16 @@
 package ru.glazunov.habitstracker.domain.repositories
 
 import android.util.Log
-import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.withContext
 import ru.glazunov.habitstracker.domain.models.Habit
 import ru.glazunov.habitstracker.domain.models.HabitType
 import ru.glazunov.habitstracker.domain.models.Ordering
 import java.util.UUID
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class HabitsRepository(
+@Singleton
+class HabitsRepository @Inject constructor (
     private val localRepository: ILocalHabitsRepository,
     private val remoteRepository: IRemoteHabitsRepository,
     private val syncRepository: ISyncHabitsRepository
@@ -51,7 +52,7 @@ class HabitsRepository(
         habitType: HabitType,
         namePrefix: String = "",
         ordering: Ordering = Ordering.Ascending
-    ): Flow<List<Habit>> = localRepository.getByTypeAndPrefix(habitType, namePrefix, ordering)
+    ): Flow<List<Habit>> = localRepository.getByTypeAndPrefix(habitType, "$namePrefix%", ordering)
 
     private fun log(message: String){
         Log.d("HabitsRepository", message)

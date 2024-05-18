@@ -1,9 +1,11 @@
 package ru.glazunov.habitstracker.data.habits.local.providers
 
-import androidx.room.*
+import androidx.room.Dao
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
+import androidx.room.Query
 import kotlinx.coroutines.flow.Flow
 import ru.glazunov.habitstracker.data.habits.local.models.LocalHabit
-import ru.glazunov.habitstracker.domain.models.HabitType
 
 @Dao
 interface HabitDao {
@@ -16,11 +18,6 @@ interface HabitDao {
     @Query("SELECT * FROM habits WHERE id = :id")
     suspend fun getHabit(id: String) : LocalHabit?
 
-    @Query("SELECT * FROM habits")
-    suspend fun getHabits(): List<LocalHabit>
-
-    @Query("SELECT * FROM habits WHERE type = :habitType")
-    fun getHabitsByType(habitType: HabitType): Flow<List<LocalHabit>>
 
     @Query("SELECT * FROM habits " +
             "WHERE type = :habitType " +

@@ -9,10 +9,12 @@ import ru.glazunov.habitstracker.domain.models.Habit
 import ru.glazunov.habitstracker.domain.models.HabitType
 import ru.glazunov.habitstracker.domain.models.Ordering
 import java.util.UUID
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class LocalHabitsRepository(
-    private val dao: HabitDao
-): ILocalHabitsRepository {
+@Singleton
+class LocalHabitsRepository @Inject constructor(private val dao: HabitDao)
+    : ILocalHabitsRepository {
     override suspend fun delete(id: UUID) = dao.deleteHabit(id.toString())
 
     override suspend fun put(habit: Habit) = dao.putHabit(HabitMapping.map(habit))
@@ -31,6 +33,6 @@ class LocalHabitsRepository(
             Ordering.Descending -> dao.getHabitsByTypeAndPrefixDesc(habitType.value, namePrefix)
             Ordering.Ascending -> dao.getHabitsByTypeAndPrefixAsc(habitType.value, namePrefix)
         }
-        return flow.map{it.map{HabitMapping.map(it)}}
+        return flow.map{it.map{habit -> HabitMapping.map(habit)}}
     }
 }

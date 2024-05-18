@@ -1,14 +1,20 @@
 package ru.glazunov.habitstracker.domain.interactor
 
+import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import ru.glazunov.habitstracker.domain.models.Habit
 import ru.glazunov.habitstracker.domain.models.HabitType
 import ru.glazunov.habitstracker.domain.repositories.HabitsRepository
 import ru.glazunov.habitstracker.domain.models.HabitsListState
 import ru.glazunov.habitstracker.domain.models.Ordering
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class ShowHabitsInteractor(
+@Singleton
+class ShowHabitsInteractor @Inject constructor(
     private val repository: HabitsRepository
 ) {
     private val state = HabitsListState()
@@ -39,10 +45,16 @@ class ShowHabitsInteractor(
         selectByState()
     }
 
-    private suspend fun selectByState(){
-        repository.get(HabitType.POSITIVE, state.searchPrefix, state.ordering)
-                .collect { positiveHabits.emit(it) }
-        repository.get(HabitType.NEGATIVE, state.searchPrefix, state.ordering)
-                .collect { negativeHabits.emit(it) }
+    private suspend fun selectByState() {
+        withContext(IO) {
+            launch {
+                repository.get(HabitType.POSITIVE, state.searchPrefix, state.ordering)
+                    .collect { positiveHabits.emit(it) }
+            }
+            launch {
+                repository.get(HabitType.NEGATIVE, state.searchPrefix, state.ordering)
+                    .collect { negativeHabits.emit(it) }
+            }
+        }
     }
 }

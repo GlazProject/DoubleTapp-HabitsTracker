@@ -22,7 +22,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="16dp"
                 android:hint="@string/habit_name"
-                android:inputType="text" />
+                android:inputType="text"
+                android:importantForAutofill="no" />
 
             <TextView
                 android:id="@+id/nameWarning"
@@ -42,7 +43,8 @@
                 android:inputType="textMultiLine"
                 android:overScrollMode="always"
                 android:scrollbarStyle="insideInset"
-                android:scrollbars="vertical" />
+                android:scrollbars="vertical"
+                android:importantForAutofill="no"/>
 
             <TextView
                 android:id="@+id/descriptionWarning"
@@ -119,7 +121,8 @@
                     android:layout_width="wrap_content"
                     android:ems="3"
                     android:layout_height="wrap_content"
-                    android:inputType="number" />
+                    android:inputType="number"
+                    android:importantForAutofill="no"/>
             </LinearLayout>
 
             <LinearLayout
@@ -138,7 +141,8 @@
                     android:layout_width="wrap_content"
                     android:ems="3"
                     android:layout_height="wrap_content"
-                    android:inputType="number" />
+                    android:inputType="number"
+                    android:importantForAutofill="no"/>
             </LinearLayout>
 
             <LinearLayout

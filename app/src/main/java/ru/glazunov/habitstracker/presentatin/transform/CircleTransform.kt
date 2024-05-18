@@ -1,4 +1,4 @@
-package ru.glazunov.habitstracker.data.profile.converters
+package ru.glazunov.habitstracker.presentatin.transform
 
 import android.graphics.*
 import com.squareup.picasso.Transformation

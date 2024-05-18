@@ -8,10 +8,12 @@ import ru.glazunov.habitstracker.data.habits.remote.mapping.HabitMapping
 import ru.glazunov.habitstracker.data.habits.remote.models.Uid
 import ru.glazunov.habitstracker.domain.repositories.IRemoteHabitsRepository
 import ru.glazunov.habitstracker.domain.models.Habit
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class RemoteHabitsRepository(
-    private val api: HabitsApi
-): IRemoteHabitsRepository {
+@Singleton
+class RemoteHabitsRepository @Inject constructor (private val api: HabitsApi)
+    : IRemoteHabitsRepository {
     override suspend fun getAll(): List<Habit> =
         withContext(IO) { sendRequest { api.getHabits() } }
             ?.map { HabitMapping.map(it) }
