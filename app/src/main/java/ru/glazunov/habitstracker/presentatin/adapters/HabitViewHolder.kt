@@ -33,7 +33,9 @@ class HabitViewHolder(
         view.type.text = getHabitTypeString(habit.type)
         view.priority.text = getHabitPriorityString(habit.priority)
         view.setBackgroundColor(habit.color)
-        view.period.text = context.getString(R.string.repeatInDays, habit.count, habit.frequency)
+        view.period.text = context.getString(R.string.repeatInDays,
+            habit.count, context.resources.getQuantityString(R.plurals.times, habit.count),
+            habit.frequency, context.resources.getQuantityString(R.plurals.days, habit.frequency))
         view.doneButton.setOnClickListener{ viewModel.doneHabit(habit.id, this::showDoneToast)}
         view.deleteHabitPreview.setOnClickListener{viewModel.deleteHabit(habit.id)}
     }

@@ -22,16 +22,31 @@
     <string name="habit_list_menu_title">Список привычек</string>
     <string name="application_title_info_menu_title">О приложении</string>
 
-    <string name="repeatInDays">%1$d раз в %2$d дней</string>
+    <string name="repeatInDays">%1$d %2$s за %3$d %4$s</string>
+    <plurals name="days">
+        <item quantity="zero">дней</item>
+        <item quantity="one">день</item>
+        <item quantity="few">дня</item>
+        <item quantity="many">дней</item>
+    </plurals>
+
+    <plurals name="times">
+        <item quantity="zero">раз</item>
+        <item quantity="one">раз</item>
+        <item quantity="few">раза</item>
+        <item quantity="many">раз</item>
+    </plurals>
+
     <string name="application_info_title">Информация о приложении</string>
     <string name="application_info_description">Приложение - трекер привычек</string>
 
     <string name="unable_to_sync_habit">Невозможно синхронизировать привычки</string>
 
+    <string name="priorityInfo">Приоритет: %1$s</string>
     <string-array name="habit_priorities">
-        <item>Высокий</item>
-        <item>Средний</item>
-        <item>Низкий</item>
+        <item>высокий</item>
+        <item>средний</item>
+        <item>низкий</item>
     </string-array>
 
     <string name="habitDoneSuccessful">You are breathtaking!</string>
