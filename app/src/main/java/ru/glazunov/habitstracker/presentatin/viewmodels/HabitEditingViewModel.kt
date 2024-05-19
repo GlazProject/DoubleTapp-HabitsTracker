@@ -12,11 +12,14 @@ import ru.glazunov.habitstracker.domain.interactor.EditHabitInteractor
 import ru.glazunov.habitstracker.domain.models.Habit
 import ru.glazunov.habitstracker.domain.models.HabitPriority
 import ru.glazunov.habitstracker.domain.models.HabitType
+import ru.glazunov.habitstracker.domain.usecases.DeleteHabitUseCase
 import java.util.*
 import javax.inject.Inject
 
 @HiltViewModel
-class HabitEditingViewModel @Inject constructor(private val interactor: EditHabitInteractor)
+class HabitEditingViewModel @Inject constructor(
+    private val interactor: EditHabitInteractor,
+    private val deleteUseCase: DeleteHabitUseCase)
     : ViewModel() {
 
     fun init() = interactor.init()
@@ -36,7 +39,7 @@ class HabitEditingViewModel @Inject constructor(private val interactor: EditHabi
     }
 
     fun deleteHabit()= viewModelScope.launch(IO) {
-        interactor.delete()
+        deleteUseCase.delete(interactor.getId())
     }
 
     fun cancel() = interactor.cancel()

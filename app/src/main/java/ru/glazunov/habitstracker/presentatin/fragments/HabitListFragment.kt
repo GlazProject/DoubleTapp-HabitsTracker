@@ -1,7 +1,6 @@
 package ru.glazunov.habitstracker.presentatin.fragments
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -30,8 +29,9 @@ class HabitListFragment(
         super.onViewCreated(view, savedInstanceState)
 
         val viewAdapter = HabitsRecyclerViewAdapter(
-                requireActivity().findNavController(R.id.nav_host_fragment)
-            )
+            viewModel,
+            requireActivity().findNavController(R.id.nav_host_fragment)
+        )
 
         habitsRecyclerView.apply {
             setHasFixedSize(true)
@@ -40,7 +40,6 @@ class HabitListFragment(
         }
 
         viewModel.habits(type).observe(viewLifecycleOwner) { habits ->
-            Log.d(this::class.java.canonicalName, "Update habits list: $habits")
             viewAdapter.setHabitInfos(habits)
         }
     }

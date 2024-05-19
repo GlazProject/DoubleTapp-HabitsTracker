@@ -19,7 +19,20 @@ class SyncHabitsRepository @Inject constructor (private val dao: HabitSyncDao)
             HabitState(
                 habitId = id,
                 networkId = remoteId ?: record?.networkId,
-                status = HabitStatus.Synchronized
+                status = HabitStatus.Synchronized,
+                doneTimes = 0
+            )
+        )
+    }
+
+    override suspend fun markDone(id: UUID, remoteId: String?) {
+        val record = dao.getRecord(id.toString())
+        dao.put(
+            HabitState(
+                habitId = id,
+                networkId = remoteId ?: record?.networkId,
+                status = HabitStatus.Modified,
+                doneTimes = (record?.doneTimes ?: 0) + 1
             )
         )
     }
@@ -30,7 +43,8 @@ class SyncHabitsRepository @Inject constructor (private val dao: HabitSyncDao)
             HabitState(
                 habitId = id,
                 networkId = remoteId ?: record?.networkId,
-                status = HabitStatus.Modified
+                status = HabitStatus.Modified,
+                doneTimes = record?.doneTimes?: 0
             )
         )
     }
@@ -41,7 +55,8 @@ class SyncHabitsRepository @Inject constructor (private val dao: HabitSyncDao)
             HabitState(
                 habitId = id,
                 networkId = record?.networkId,
-                status = HabitStatus.Deleted
+                status = HabitStatus.Deleted,
+                0
             )
         )
     }
@@ -49,16 +64,16 @@ class SyncHabitsRepository @Inject constructor (private val dao: HabitSyncDao)
     override suspend fun delete(id: UUID) = dao.deleteRecord(id.toString())
 
     override suspend fun getNotDeleted(): List<ISyncHabitsRepository.SyncRecord> =
-        dao.getNotDeleted().map {ISyncHabitsRepository.SyncRecord(it.habitId, it.networkId)}
+        dao.getNotDeleted().map {ISyncHabitsRepository.SyncRecord(it.habitId, it.networkId, it.doneTimes)}
 
     override fun getDeleted(): Flow<List<ISyncHabitsRepository.SyncRecord>> =
-        dao.getDeleted().map {it.map{ record -> ISyncHabitsRepository.SyncRecord(record.habitId, record.networkId)}}
+        dao.getDeleted().map {it.map{ record -> ISyncHabitsRepository.SyncRecord(record.habitId, record.networkId, record.doneTimes)}}
 
     override fun getModified(): Flow<List<ISyncHabitsRepository.SyncRecord>> =
-        dao.getModified().map {it.map{ record -> ISyncHabitsRepository.SyncRecord(record.habitId, record.networkId)}}
+        dao.getModified().map {it.map{ record -> ISyncHabitsRepository.SyncRecord(record.habitId, record.networkId, record.doneTimes)}}
 
     override suspend fun gerRecord(id: UUID): ISyncHabitsRepository.SyncRecord? {
         val record = dao.getRecord(id.toString()) ?: return null
-        return ISyncHabitsRepository.SyncRecord(record.habitId, record.networkId)
+        return ISyncHabitsRepository.SyncRecord(record.habitId, record.networkId, record.doneTimes)
     }
 }

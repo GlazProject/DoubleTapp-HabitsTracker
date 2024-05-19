@@ -5,6 +5,7 @@ import kotlinx.coroutines.flow.Flow
 import ru.glazunov.habitstracker.domain.models.Habit
 import ru.glazunov.habitstracker.domain.models.HabitType
 import ru.glazunov.habitstracker.domain.models.Ordering
+import java.util.Date
 import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -12,7 +13,6 @@ import javax.inject.Singleton
 @Singleton
 class HabitsRepository @Inject constructor (
     private val localRepository: ILocalHabitsRepository,
-    private val remoteRepository: IRemoteHabitsRepository,
     private val syncRepository: ISyncHabitsRepository
 ) {
     suspend fun put(habit: Habit){
@@ -21,31 +21,23 @@ class HabitsRepository @Inject constructor (
         syncRepository.markModified(habit.id)
     }
 
-    suspend fun reload(){
-        val syncData = syncRepository.getNotDeleted()
-        val remoteHabits = remoteRepository.getAll()
+    suspend fun delete(habit: Habit) = delete(habit.id)
 
-        for (habit in remoteHabits) {
-            val entry = syncData.firstOrNull{it.remoteId == habit.remoteId}
-            if (entry != null) habit.id = entry.id
-            localRepository.put(habit)
-            syncRepository.markSynchronised(habit.id, habit.remoteId)
-        }
-
-        syncData.filter { it.remoteId != null }
-            .filter { habit -> remoteHabits.firstOrNull{it.remoteId == habit.remoteId} == null }
-            .forEach{ localRepository.delete(it.id) }
-    }
-
-    suspend fun delete(habit: Habit){
-        log("Deleting habit $habit")
-        localRepository.delete(habit.id)
-        syncRepository.markDeleted(habit.id)
+    suspend fun delete(id: UUID){
+        log("Deleting habit $id")
+        localRepository.delete(id)
+        syncRepository.markDeleted(id)
     }
 
     suspend fun get(id: UUID): Habit?{
         log("Getting habit with id $id")
         return localRepository.get(id)
+    }
+
+    suspend fun addDoneDate(date: Date, id: UUID){
+        log("Add done date $date for habit $id")
+        localRepository.addDoneDate(date, id)
+        syncRepository.markDone(id)
     }
 
     fun get(

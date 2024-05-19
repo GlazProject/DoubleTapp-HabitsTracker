@@ -1,5 +1,6 @@
 package ru.glazunov.habitstracker.domain.models
 
+import java.util.Date
 import java.util.UUID
 
 data class Habit (
@@ -11,5 +12,6 @@ data class Habit (
     var frequency: Int = 0,
     var color: Int = -1,
     var remoteId: String? = null,
+    var doneDates: List<Date> = listOf(),
     var id: UUID = UUID.randomUUID()
 )

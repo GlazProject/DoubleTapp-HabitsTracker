@@ -5,9 +5,11 @@ import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.withContext
 import retrofit2.Response
 import ru.glazunov.habitstracker.data.habits.remote.mapping.HabitMapping
+import ru.glazunov.habitstracker.data.habits.remote.models.HabitDone
 import ru.glazunov.habitstracker.data.habits.remote.models.Uid
 import ru.glazunov.habitstracker.domain.repositories.IRemoteHabitsRepository
 import ru.glazunov.habitstracker.domain.models.Habit
+import java.util.Date
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -24,6 +26,9 @@ class RemoteHabitsRepository @Inject constructor (private val api: HabitsApi)
 
     override suspend fun delete(id: String): Boolean =
         withContext(IO) { sendRequest { api.deleteHabit(Uid(id)) } } != null
+
+    override suspend fun done(date: Date, id: String): Boolean =
+        withContext(IO) {sendRequest { api.doneHabit(HabitDone(date.time, id)) }} != null
 
 
     private suspend fun <T> sendRequest(method: suspend () -> Response<T>): T? {

@@ -32,11 +32,6 @@ class EditHabitInteractor @Inject constructor(
         habit = null
     }
 
-    suspend fun delete() {
-        repository.delete(habit!!)
-        habit = null
-    }
-
     fun cancel(){
         habit = null
     }

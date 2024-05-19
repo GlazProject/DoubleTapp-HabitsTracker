@@ -10,12 +10,14 @@ import ru.glazunov.habitstracker.domain.models.HabitType
 import ru.glazunov.habitstracker.domain.repositories.HabitsRepository
 import ru.glazunov.habitstracker.domain.models.HabitsListState
 import ru.glazunov.habitstracker.domain.models.Ordering
+import ru.glazunov.habitstracker.domain.syncronization.HabitsSynchronizer
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class ShowHabitsInteractor @Inject constructor(
-    private val repository: HabitsRepository
+    private val repository: HabitsRepository,
+    private val synchronizer: HabitsSynchronizer
 ) {
     private val state = HabitsListState()
     private val positiveHabits: MutableStateFlow<List<Habit>> = MutableStateFlow(listOf())
@@ -33,7 +35,7 @@ class ShowHabitsInteractor @Inject constructor(
         }
     }
 
-    suspend fun refresh() = repository.reload()
+    suspend fun refresh() = synchronizer.refresh()
 
     suspend fun selectByName(name: String){
         state.searchPrefix = name

@@ -22,7 +22,7 @@ import kotlinx.coroutines.launch
 import ru.glazunov.habitstracker.R
 import ru.glazunov.habitstracker.domain.interactor.ShowHabitsInteractor
 import ru.glazunov.habitstracker.presentatin.transform.CircleTransform
-import ru.glazunov.habitstracker.domain.repositories.HabitsSynchronizer
+import ru.glazunov.habitstracker.domain.syncronization.HabitsSynchronizer
 import javax.inject.Inject
 
 @AndroidEntryPoint

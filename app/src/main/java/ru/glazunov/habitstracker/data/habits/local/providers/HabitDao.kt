@@ -18,7 +18,6 @@ interface HabitDao {
     @Query("SELECT * FROM habits WHERE id = :id")
     suspend fun getHabit(id: String) : LocalHabit?
 
-
     @Query("SELECT * FROM habits " +
             "WHERE type = :habitType " +
             "AND title LIKE :name " +

@@ -34,6 +34,12 @@
         <item>Низкий</item>
     </string-array>
 
+    <string name="habitDoneSuccessful">You are breathtaking!</string>
+    <string name="requireHabitDoneCount">Стоит выполнить еще </string>
+    <string name="notMoreHabitDoneCount">Можете выполнить еще </string>
+    <string name="habitRunOut">Хватит это делать</string>
+    <string name="error">Что-то пошло не так</string>
+
     <string name="app_info_menu_title">О приложении</string>
     <string name="search">Поиск</string>
     <string name="filter_by_name">Отсортировать по названию</string>
@@ -45,4 +51,5 @@
     <string name="title_habit_information">Информация о привычке</string>
     <string name="profile_image_description">Фотография профиля</string>
     <string name="delete">Удалить</string>
+    <string name="done">Готово</string>
 </resources>

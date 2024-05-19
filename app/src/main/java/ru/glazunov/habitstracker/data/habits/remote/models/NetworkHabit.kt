@@ -7,7 +7,7 @@ data class NetworkHabit (
     val count: Int? = null,
     val date: Int? = null,
     val description: String? = null,
-    val doneDates: List<Int>? = null,
+    val done_dates: List<Long>? = null,
     val frequency: Int? = null,
     val priority: Int? = null,
     val title: String? = null,

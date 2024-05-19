@@ -4,6 +4,7 @@ import ru.glazunov.habitstracker.data.habits.local.models.LocalHabit
 import ru.glazunov.habitstracker.domain.models.Habit
 import ru.glazunov.habitstracker.domain.models.HabitPriority
 import ru.glazunov.habitstracker.domain.models.HabitType
+import java.util.Date
 
 class HabitMapping {
     companion object{
@@ -15,7 +16,8 @@ class HabitMapping {
             repeatsCount = habit.count,
             daysPeriod = habit.frequency,
             color = habit.color,
-            id = habit.id
+            id = habit.id,
+            doneDates = habit.doneDates.map { it.time }.toMutableList()
         )
 
         fun map(habit: LocalHabit): Habit = Habit(
@@ -26,7 +28,8 @@ class HabitMapping {
             count = habit.repeatsCount,
             frequency = habit.daysPeriod,
             color = habit.color,
-            id = habit.id
+            id = habit.id,
+            doneDates = habit.doneDates?.map { Date(it) } ?: listOf()
         )
     }
 }

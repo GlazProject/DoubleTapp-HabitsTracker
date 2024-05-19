@@ -4,7 +4,7 @@ import ru.glazunov.habitstracker.data.habits.remote.models.NetworkHabit
 import ru.glazunov.habitstracker.domain.models.Habit
 import ru.glazunov.habitstracker.domain.models.HabitPriority
 import ru.glazunov.habitstracker.domain.models.HabitType
-import java.time.Clock
+import java.util.Date
 
 class HabitMapping{
     companion object{
@@ -16,7 +16,7 @@ class HabitMapping{
             priority = habit.priority.value,
             title = habit.title,
             type = habit.type.value,
-            date = Clock.systemUTC().millis().toInt(),
+            date = Date().time.toInt(),
             uid = habit.remoteId ?: ""
         )
 
@@ -28,6 +28,7 @@ class HabitMapping{
             count = habit.count ?: 0,
             frequency = habit.frequency ?: 0,
             color = habit.color ?: -1,
+            doneDates = habit.done_dates?.map { Date(it) } ?: listOf(),
             remoteId = habit.uid
         )
     }

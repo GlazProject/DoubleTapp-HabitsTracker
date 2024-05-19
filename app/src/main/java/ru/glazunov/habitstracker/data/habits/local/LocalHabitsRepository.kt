@@ -8,6 +8,7 @@ import ru.glazunov.habitstracker.domain.repositories.ILocalHabitsRepository
 import ru.glazunov.habitstracker.domain.models.Habit
 import ru.glazunov.habitstracker.domain.models.HabitType
 import ru.glazunov.habitstracker.domain.models.Ordering
+import java.util.Date
 import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -22,6 +23,13 @@ class LocalHabitsRepository @Inject constructor(private val dao: HabitDao)
     override suspend fun get(id: UUID): Habit? {
         val data = dao.getHabit(id.toString()) ?: return null
         return HabitMapping.map(data)
+    }
+
+    override suspend fun addDoneDate(date: Date, id: UUID) {
+        val data = dao.getHabit(id.toString())
+        data?.doneDates?.add(date.time)
+        if (data != null)
+            dao.putHabit(data)
     }
 
     override fun getByTypeAndPrefix(

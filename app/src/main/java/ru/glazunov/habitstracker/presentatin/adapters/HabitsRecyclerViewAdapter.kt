@@ -7,8 +7,10 @@ import androidx.navigation.NavController
 import androidx.recyclerview.widget.RecyclerView
 import ru.glazunov.habitstracker.R
 import ru.glazunov.habitstracker.domain.models.Habit
+import ru.glazunov.habitstracker.presentatin.viewmodels.HabitsListViewModel
 
 class HabitsRecyclerViewAdapter(
+    private val viewModel: HabitsListViewModel,
     private val navController: NavController
 ) : RecyclerView.Adapter<HabitViewHolder>() {
     private var habitsInfos: List<Habit> = arrayListOf()
@@ -23,6 +25,7 @@ class HabitsRecyclerViewAdapter(
         return HabitViewHolder(
             view,
             parent.context,
+            viewModel,
             navController
         )
     }

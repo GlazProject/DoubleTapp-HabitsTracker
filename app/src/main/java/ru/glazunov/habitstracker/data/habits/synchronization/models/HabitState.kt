@@ -11,5 +11,6 @@ import java.util.UUID
 data class HabitState (
     @PrimaryKey(autoGenerate = false) val habitId: UUID,
     val networkId: String?,
-    val status: HabitStatus
+    val status: HabitStatus,
+    val doneTimes: Int
 )

@@ -4,7 +4,9 @@ import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.HTTP
+import retrofit2.http.POST
 import retrofit2.http.PUT
+import ru.glazunov.habitstracker.data.habits.remote.models.HabitDone
 import ru.glazunov.habitstracker.data.habits.remote.models.NetworkHabit
 import ru.glazunov.habitstracker.data.habits.remote.models.Uid
 
@@ -17,4 +19,7 @@ interface HabitsApi {
 
     @HTTP(method = "DELETE", path = "habit", hasBody = true)
     suspend fun deleteHabit(@Body uid: Uid): Response<Unit>
+
+    @POST("habit_done")
+    suspend fun doneHabit(@Body data: HabitDone): Response<Unit>
 }
