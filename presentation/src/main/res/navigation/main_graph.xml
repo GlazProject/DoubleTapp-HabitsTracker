@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_graph"
+    app:startDestination="@id/nav_habits">
+
+    <fragment
+        android:id="@+id/nav_habit_editing"
+        android:name="ru.glazunov.habitstracker.fragments.HabitEditingFragment"
+        android:label="@string/title_habit_information"
+        tools:layout="@layout/fragment_habit_editing">
+        <action
+            android:id="@+id/action_habitEditingFragment_to_mainFragment"
+            app:destination="@id/nav_habits" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/nav_info"
+        android:name="ru.glazunov.habitstracker.fragments.AppInfoFragment"
+        android:label="@string/app_info_menu_title"
+        tools:layout="@layout/fragment_app_info">
+        <action
+            android:id="@+id/action_appInfoFragment_to_mainFragment"
+            app:destination="@id/nav_habits" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/nav_habits"
+        android:name="ru.glazunov.habitstracker.fragments.MainFragment"
+        android:label="@string/habit_list_menu_title"
+        tools:layout="@layout/fragment_habits_main">
+        <action
+            android:id="@+id/action_mainFragment_to_habitEditingFragment"
+            app:destination="@id/nav_habit_editing" />
+        <action
+            android:id="@+id/action_mainFragment_to_appInfoFragment"
+            app:destination="@id/nav_info" />
+    </fragment>
+</navigation>

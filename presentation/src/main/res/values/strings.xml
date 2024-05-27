@@ -1,0 +1,70 @@
+<resources>
+    <string name="app_name">HabitsTracker</string>
+    <string name="action_settings">Settings</string>
+
+    <string name="add_new_habit">Добавить новую привычку</string>
+    <string name="habit_name">Название</string>
+    <string name="habit_description">Описание</string>
+    <string name="habit_type">Тип</string>
+    <string name="positive_habit">Хорошая</string>
+    <string name="positive_habits">Хорошие</string>
+    <string name="negative_habit">Плохая</string>
+    <string name="negative_habits">Плохие</string>
+    <string name="habit_priority">Приоритет:</string>
+    <string name="repeats_count">Число повторений:</string>
+    <string name="times_in_days">Периодичность в днях:</string>
+    <string name="selected_color">Выбранный цвет</string>
+    <string name="rgb_color">rgb : ( %1$d, %2$d, %3$d)</string>
+    <string name="hsv_color">hsv : ( %1$.1f, %2$.1f, %3$.1f)</string>
+    <string name="cancel">Отменить</string>
+    <string name="save">Сохранить</string>
+
+    <string name="habit_list_menu_title">Список привычек</string>
+    <string name="application_title_info_menu_title">О приложении</string>
+
+    <string name="repeatInDays">%1$d %2$s за %3$d %4$s</string>
+    <plurals name="days">
+        <item quantity="zero">дней</item>
+        <item quantity="one">день</item>
+        <item quantity="few">дня</item>
+        <item quantity="many">дней</item>
+    </plurals>
+
+    <plurals name="times">
+        <item quantity="zero">раз</item>
+        <item quantity="one">раз</item>
+        <item quantity="few">раза</item>
+        <item quantity="many">раз</item>
+    </plurals>
+
+    <string name="application_info_title">Информация о приложении</string>
+    <string name="application_info_description">Приложение - трекер привычек</string>
+
+    <string name="unable_to_sync_habit">Невозможно синхронизировать привычки</string>
+
+    <string name="priorityInfo">Приоритет: %1$s</string>
+    <string-array name="habit_priorities">
+        <item>высокий</item>
+        <item>средний</item>
+        <item>низкий</item>
+    </string-array>
+
+    <string name="habitDoneSuccessful">You are breathtaking!</string>
+    <string name="requireHabitDoneCount">Стоит выполнить еще %1$d %2$s</string>
+    <string name="notMoreHabitDoneCount">Можете выполнить еще %1$d %2$s</string>
+    <string name="habitRunOut">Хватит это делать</string>
+    <string name="error">Что-то пошло не так</string>
+
+    <string name="app_info_menu_title">О приложении</string>
+    <string name="search">Поиск</string>
+    <string name="filter_by_name">Отсортировать по названию</string>
+    <string name="priprityOrderingName">Отсортировать по приоритету</string>
+    <string name="descending">А-Я</string>
+    <string name="ascending">Я-А</string>
+    <string name="description_warning">Описание не должно быть пустым</string>
+    <string name="name_warning">Название не должно быть пустым</string>
+    <string name="title_habit_information">Информация о привычке</string>
+    <string name="profile_image_description">Фотография профиля</string>
+    <string name="delete">Удалить</string>
+    <string name="done">Готово</string>
+</resources>
