@@ -26,6 +26,9 @@
       <entry key="app.data">
         <State />
       </entry>
+      <entry key="presentation">
+        <State />
+      </entry>
     </value>
   </component>
 </project>

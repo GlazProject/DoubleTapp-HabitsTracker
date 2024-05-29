@@ -1,6 +1,7 @@
 package ru.glazunov.domain.repositories
 
 import kotlinx.coroutines.flow.Flow
+import ru.glazunov.domain.di.DomainScope
 import ru.glazunov.domain.models.Habit
 import ru.glazunov.domain.models.HabitType
 import ru.glazunov.domain.models.Ordering
@@ -9,7 +10,7 @@ import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Singleton
 
-@Singleton
+@DomainScope
 class HabitsRepository @Inject constructor (
     private val localRepository: ILocalHabitsRepository,
     private val syncRepository: ISyncHabitsRepository

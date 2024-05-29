@@ -3,6 +3,7 @@ package ru.glazunov.domain.usecases
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import ru.glazunov.domain.di.DomainScope
 import ru.glazunov.domain.models.DoneHabitResult
 import ru.glazunov.domain.models.DoneHabitResultType
 import ru.glazunov.domain.models.HabitType
@@ -13,7 +14,7 @@ import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Singleton
 
-@Singleton
+@DomainScope
 class DoneHabitUseCase @Inject constructor(
     private val repository: HabitsRepository
 ){

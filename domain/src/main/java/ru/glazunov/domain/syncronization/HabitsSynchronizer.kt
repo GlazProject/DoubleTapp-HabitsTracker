@@ -2,13 +2,14 @@ package ru.glazunov.domain.syncronization
 
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.withContext
+import ru.glazunov.domain.di.DomainScope
 import ru.glazunov.domain.repositories.ILocalHabitsRepository
 import ru.glazunov.domain.repositories.IRemoteHabitsRepository
 import ru.glazunov.domain.repositories.ISyncHabitsRepository
 import javax.inject.Inject
 import javax.inject.Singleton
 
-@Singleton
+@DomainScope
 class HabitsSynchronizer @Inject constructor (
     private val syncRepository: ISyncHabitsRepository,
     private val localRepository: ILocalHabitsRepository,
