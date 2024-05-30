@@ -23,7 +23,9 @@ class HabitEditingViewModel @Inject constructor(
 )
     : ViewModel() {
 
-    fun init() = interactor.init()
+    init{
+        interactor.init()
+    }
 
     fun getHabit(id: UUID): LiveData<Habit> {
         val data = MutableLiveData<Habit>()

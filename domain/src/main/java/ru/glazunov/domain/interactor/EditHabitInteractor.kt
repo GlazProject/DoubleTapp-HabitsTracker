@@ -1,6 +1,5 @@
 package ru.glazunov.domain.interactor
 
-import ru.glazunov.domain.di.DomainScope
 import ru.glazunov.domain.models.Habit
 import ru.glazunov.domain.models.HabitPriority
 import ru.glazunov.domain.models.HabitType
@@ -9,7 +8,7 @@ import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Singleton
 
-@DomainScope
+@Singleton
 class EditHabitInteractor @Inject constructor(
     private val repository: HabitsRepository
 ) {

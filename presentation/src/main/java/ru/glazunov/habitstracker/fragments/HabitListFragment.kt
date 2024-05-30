@@ -16,7 +16,8 @@ import ru.glazunov.habitstracker.viewmodels.HabitsListViewModel
 class HabitListFragment(
     private val viewModel: HabitsListViewModel,
     private val type: HabitType
-    ) : Fragment() {
+    ) : Fragment() { // лучше прописать ещё и пустой конструктор для автоматического создания при изменнеии стейта
+        // создавать через провайдер и аргументы
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,

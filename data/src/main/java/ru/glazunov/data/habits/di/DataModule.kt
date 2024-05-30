@@ -4,6 +4,9 @@ import android.content.Context
 import androidx.room.Room
 import dagger.Module
 import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
+import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import okhttp3.internal.http.RetryAndFollowUpInterceptor
 import retrofit2.Retrofit
@@ -21,19 +24,21 @@ import ru.glazunov.domain.repositories.ILocalHabitsRepository
 import ru.glazunov.domain.repositories.IRemoteHabitsRepository
 import ru.glazunov.domain.repositories.ISyncHabitsRepository
 import java.util.concurrent.TimeUnit
+import javax.inject.Singleton
 
-@Module(includes = [ContextModule::class])
-object DataModule {
+@Module
+@InstallIn(SingletonComponent::class)
+class DataModule {
     @Provides
-    @DataScope
+    @Singleton
     fun providesBaseUrl(): String = "https://droid-test-server.doubletapp.ru/api/"
 
-    @DataScope
+    @Singleton
     @Provides
     fun providesAuthInterceptor(): AuthInterceptor =
         AuthInterceptor(BuildConfig.API_KEY)
 
-    @DataScope
+    @Singleton
     @Provides
     fun providesOkHttpClient(
         authInterceptor: AuthInterceptor
@@ -47,7 +52,7 @@ object DataModule {
                 .build()}
 
 
-    @DataScope
+    @Singleton
     @Provides
     fun provideRetrofit(
         baseUrl: String,
@@ -59,14 +64,14 @@ object DataModule {
         .build()
 
     @Provides
-    @DataScope
+    @Singleton
     fun provideHabitsApi(retrofit: Retrofit): ru.glazunov.data.habits.remote.HabitsApi =
         retrofit.create(
         ru.glazunov.data.habits.remote.HabitsApi::class.java)
 
     @Provides
-    @DataScope
-    fun provideLocalHabitsDatabase(context: Context): HabitsDatabase =
+    @Singleton
+    fun provideLocalHabitsDatabase(@ApplicationContext context: Context): HabitsDatabase =
         Room.databaseBuilder(
         context.applicationContext,
         HabitsDatabase::class.java,
@@ -76,12 +81,12 @@ object DataModule {
         .build()
 
     @Provides
-    @DataScope
+    @Singleton
     fun provideLocalHabitDao(database: HabitsDatabase): HabitDao = database.habitDao()
 
     @Provides
-    @DataScope
-    fun provideHabitsSyncDatabase(context: Context): HabitsSyncDatabase =
+    @Singleton
+    fun provideHabitsSyncDatabase(@ApplicationContext context: Context): HabitsSyncDatabase =
         Room.databaseBuilder(
         context.applicationContext,
         HabitsSyncDatabase::class.java,
@@ -91,21 +96,21 @@ object DataModule {
         .build()
 
     @Provides
-    @DataScope
+    @Singleton
     fun provideHabitsSyncDao(database: HabitsSyncDatabase): HabitSyncDao = database.getDao()
 
     @Provides
-    @DataScope
+    @Singleton
     fun providesRemoteHabitsRepo(api: ru.glazunov.data.habits.remote.HabitsApi): IRemoteHabitsRepository =
         RemoteHabitsRepository(api)
 
     @Provides
-    @DataScope
+    @Singleton
     fun providesLocalHabitsRepo(dao: HabitDao): ILocalHabitsRepository =
         LocalHabitsRepository(dao)
 
     @Provides
-    @DataScope
+    @Singleton
     fun providesSyncHabitsRepo(dao: HabitSyncDao): ISyncHabitsRepository =
         SyncHabitsRepository(dao)
 }

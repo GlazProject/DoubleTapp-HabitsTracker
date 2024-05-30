@@ -13,9 +13,11 @@ import java.util.UUID
 
 class LocalHabitsRepository(private val dao: HabitDao)
     : ILocalHabitsRepository {
-    override suspend fun delete(id: UUID) = dao.deleteHabit(id.toString())
+    override suspend fun delete(id: UUID) {
+        dao.deleteHabit(id.toString())
+    }
 
-    override suspend fun put(habit: Habit) = dao.putHabit(HabitMapping.map(habit))
+    override suspend fun put(habit: Habit) { dao.putHabit(HabitMapping.map(habit)) }
 
     override suspend fun get(id: UUID): Habit? {
         val data = dao.getHabit(id.toString()) ?: return null

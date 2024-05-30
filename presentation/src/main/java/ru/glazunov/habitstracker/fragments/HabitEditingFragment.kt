@@ -41,7 +41,7 @@ class HabitEditingFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel = ViewModelProvider(requireActivity())[HabitEditingViewModel::class.java]
-        viewModel.init()
+        // viewModel.init() // Должно работать без этого
         arguments?.let { loadHabit(it) }
     }
 

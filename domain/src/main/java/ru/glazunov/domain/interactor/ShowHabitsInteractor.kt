@@ -5,7 +5,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import ru.glazunov.domain.di.DomainScope
 import ru.glazunov.domain.models.Habit
 import ru.glazunov.domain.models.HabitType
 import ru.glazunov.domain.repositories.HabitsRepository
@@ -15,7 +14,7 @@ import ru.glazunov.domain.syncronization.HabitsSynchronizer
 import javax.inject.Inject
 import javax.inject.Singleton
 
-@DomainScope
+@Singleton
 class ShowHabitsInteractor @Inject constructor(
     private val repository: HabitsRepository,
     private val synchronizer: HabitsSynchronizer
